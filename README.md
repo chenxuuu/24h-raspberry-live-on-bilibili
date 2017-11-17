@@ -1,6 +1,14 @@
 # 24h-raspberry-live-on-bilibili
 树莓派驱动的b站直播点歌台
 
-演示直播：http://live.bilibili.com/16703
+注意这个是新项目，查看旧版的代码请打开“old”分支查看（旧版为网页点歌版）
 
-具体描述请见https://www.chenxublog.com/2017/06/05/raspi-live-24h-bilibili-choice.html
+本项目正在编写中，预计需要的功能为：
+
+- 弹幕点歌
+- 接收弹幕--已完成
+- 弹幕反馈（发送弹幕）--已完成
+- 旧版实现的视频推流功能
+- 自定义介绍字幕
+
+如果你能提供帮助，请联系我，万分感谢！
