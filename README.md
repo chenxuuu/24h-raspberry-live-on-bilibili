@@ -91,6 +91,10 @@ git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 
 如有条件，请`务必`自己搭建php的下载链接解析服务，源码都在`php`文件夹内
 
+`default_mp3`文件夹内放入mp3格式的音乐，在无人点歌时播放，请尽量保证文件名全英文
+
+`default_pic`文件夹内放入jpg格式的音乐，用于做为放音乐时的背景，请尽量保证文件名全英文
+
 所有配置完成后，开启直播，然后启动脚本即可：
 ```Bash
 screen python3 post_dm.py
