@@ -11,10 +11,10 @@ import time
 import ass_maker
 #需要修改的值
 
-path = 'E:\\onedrive\\wst\\24h-raspberry-live-on-bilibili'
+path = '/home/pi/live'
 #本文件的路径，请修改
 
-roomid = ''
+roomid = '16703'
 #房间id（真实id，不一定是网址里的那个数）
 
 cookie = ''
@@ -39,13 +39,13 @@ def get_download_url(s, t, user, song = "nothing"):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3')
-            if(song == "nothing")
+            if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path)
             else:
                 ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N歌曲名（可能不对）："+song+"\\N点播人："+user,path)
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
-            if(song == "nothing")
+            if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV名（可能不对）："+song+"\\N点播人："+user,path)

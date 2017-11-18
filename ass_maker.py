@@ -25,7 +25,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 2,0:00:00.00,99:00:00.00,left_down,,0,0,0,,'''+info+'''
 Dialogue: 2,0:00:00.00,99:00:00.00,right_down,,0,0,0,,基于树莓派3B，已开源\\N源码见https://github.com/chenxuuu/24h-raspberry-live-on-bilibili
 Dialogue: 2,0:00:00.00,99:00:00.00,left_up,,0,0,0,,晨旭的树莓派点歌台~
-Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\\N发送song+音乐名，可搜索点歌\\N发送id+网易云歌曲id，可按id点歌\\N发送mv+MV名，可点播网易云MV\\N发送mvid+网易云MV id，可按id点MV\\N测试点歌台，功能不断完善中
+Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\\N发送song+音乐名，可搜索点歌\\N发送id+网易云歌曲id，可按id点歌\\N发送mv+MV名，可点播网易云MV\\N发送mvid+网易云MV id，可按id点MV\\N请点播十分钟内的歌曲\\N测试点歌台，功能不断完善中
 '''
     file = open(path+'/downloads/'+str(filename)+'.ass','w')
     file.write(file_content)
