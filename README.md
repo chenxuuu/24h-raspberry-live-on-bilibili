@@ -1,6 +1,8 @@
 # 24h-raspberry-live-on-bilibili
 树莓派驱动的b站直播点歌台
 
+demo:http://live.bilibili.com/16703
+
 注意这个是新项目，查看旧版的代码请打开“old”分支查看（旧版为网页点歌版）
 
 本项目正在编写中，预计需要的功能为：
