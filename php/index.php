@@ -12,10 +12,31 @@ function get_url_mv($id)
     $api = new NeteaseMusicAPI();
     $result = $api->mv($id);
     $data=json_decode($result, true);
-    return $data['data']['brs']['720'];
+    $vurl = $data['data']['brs']['720'];
+    if($vurl == null)
+    {
+        $vurl = $data['data']['brs']['480'];
+    }
+    return $vurl;
 }
 
-if(!empty($_GET['id']))
+
+if(!empty($_GET['debug']))
+{
+    if(!empty($_GET['id']))
+    {
+        $api = new NeteaseMusicAPI();
+        $result = $api->url($_GET['id']);
+        echo $result;
+    }
+    elseif(!empty($_GET['mv']))
+    {
+        $api = new NeteaseMusicAPI();
+        $result = $api->mv($_GET['mv']);
+        echo $result;
+    }
+}
+elseif(!empty($_GET['id']))
 {
     echo get_url_id($_GET['id']);
 }
