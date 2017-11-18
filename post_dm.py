@@ -227,5 +227,5 @@ print('程序已启动，连接房间id：'+roomid)
 #         get_dm_loop()
 #     except:
 #         print('shit')
-pick_msg('mv光辉岁月', 'test')
+pick_msg('song种太阳', 'test')
 print('done')
