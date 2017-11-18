@@ -22,7 +22,11 @@ cookie = ''
 download_api_url = 'http://qq.papapoi.com/163/'
 #获取音乐链接的api网址，服务器性能有限，尽量请换成自己的，php文件在php文件夹
 
-
+def del_file(f):
+    try:
+        os.remove(path+'/downloads/'+f)
+    except:
+        print('delete error')
 
 def get_download_url(s, t):
     print('[log]getting url:'+t+str(s))
@@ -39,8 +43,12 @@ def get_download_url(s, t):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
             ass_maker.make_ass(filename,'mv'+str(s),path)
         send_dm('下载完成，已加入播放队列')
+        print('[log]已添加排队项目：'+t+str(s))
     except:
-        send_dm('出错了：下载出错')
+        send_dm('出错了：下载出错，请换一首')
+        print('[log]下载文件出错：'+t+str(s)+',url:'+url)
+        del_file(filename+'.mp3')
+        del_file(filename+'.mp4')
     return url
 
 
@@ -54,32 +62,71 @@ def search_song(s):
     return get_download_url(result_id, 'id')
 
 
+def search_mv(s):
+    url = "http://music.163.com/api/search/get/"
+    postdata =urllib.parse.urlencode({	
+    's':s,
+    'offset':'1',
+    'limit':'10',
+    'type':'1004'
+    }).encode('utf-8')
+    header = {
+    "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Encoding":"utf-8",
+    "Accept-Language":"zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+    "Connection":"keep-alive",
+    "Host":"music.163.com",
+    "Referer":"http://music.163.com/",
+    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
+    }
+    req = urllib.request.Request(url,postdata,header)
+    result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+    result_id = result['result']['mvs'][0]['id']
+    return get_download_url(result_id, 'mv')
+
+
+
+
 def pick_msg(s, user):
-    if(s.find('mv+') == 0):
-        send_dm('已收到用户'+user+'的点播指令，即将下载')
-        get_download_url(s.replace('mv+', '', 1), 'mv')
+    if(s.find('mvid+') == 0):
+        send_dm('已收到'+user+'的指令')
+        get_download_url(s.replace('mvid+', '', 1), 'mv')
+    elif (s.find('mv+') == 0):
+        try:
+            send_dm('已收到'+user+'的指令')
+            search_mv(s.replace('mv+', '', 1))
+        except:
+            print('[log]mv not found')
+            send_dm('出错了：没这mv')
     elif (s.find('song+') == 0):
         try:
-            send_dm('已收到用户'+user+'的点播指令，即将下载')
+            send_dm('已收到'+user+'的指令')
             search_song(s.replace('song+', '', 1))
         except:
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('id+') == 0):
-        send_dm('已收到用户'+user+'的点播指令，即将下载')
+        send_dm('已收到'+user+'的指令')
         get_download_url(s.replace('id+', '', 1), 'id')
-    elif(s.find('mv') == 0):
-        send_dm('已收到用户'+user+'的点播指令，即将下载')
-        get_download_url(s.replace('mv', '', 1), 'mv')
+    elif(s.find('mvid') == 0):
+        send_dm('已收到'+user+'的指令')
+        get_download_url(s.replace('mvid', '', 1), 'mv')
+    elif (s.find('mv') == 0):
+        try:
+            send_dm('已收到'+user+'的指令')
+            search_mv(s.replace('mv', '', 1))
+        except:
+            print('[log]mv not found')
+            send_dm('出错了：没这mv')
     elif (s.find('song') == 0):
         try:
-            send_dm('已收到用户'+user+'的点播指令，即将下载')
+            send_dm('已收到'+user+'的指令')
             search_song(s.replace('song', '', 1))
         except:
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('id') == 0):
-        send_dm('已收到用户'+user+'的点播指令，即将下载')
+        send_dm('已收到'+user+'的指令')
         get_download_url(s.replace('id', '', 1), 'id')
     # else:
     #     print('not match anything')
@@ -180,5 +227,5 @@ print('程序已启动，连接房间id：'+roomid)
 #         get_dm_loop()
 #     except:
 #         print('shit')
-get_download_url(123456, 'id')
+pick_msg('mv光辉岁月', 'test')
 print('done')

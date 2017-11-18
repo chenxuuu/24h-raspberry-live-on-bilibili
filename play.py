@@ -12,15 +12,22 @@ while True:
         if(f.find('.mp3') != -1):
             print('mp3:'+f)
             print(f.replace(".mp3",'')+'.ass')#需改
-            os.remove(path+'/downloads/'+f)
-            os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.ass')
+            try:
+                os.remove(path+'/downloads/'+f)
+                os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.ass')
+            except:
+                print('delete error')
             count+=1
         if(f.find('.mp4') != -1):
             print('mp4:'+f)
             print(f.replace(".mp4",'')+'.ass')#需改
-            os.remove(path+'/downloads/'+f)
-            os.remove(path+'/downloads/'+f.replace(".mp4",'')+'.ass')
+            try:
+                os.remove(path+'/downloads/'+f)
+                os.remove(path+'/downloads/'+f.replace(".mp4",'')+'.ass')
+            except:
+                print('delete error')
             count+=1
     if(count == 0):
         print('no media')
+        exit()
         #需改

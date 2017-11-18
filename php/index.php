@@ -19,9 +19,9 @@ if(!empty($_GET['id']))
 {
     echo get_url_id($_GET['id']);
 }
-elseif(!empty($_GET['mvid']))
+elseif(!empty($_GET['mv']))
 {
-    echo get_url_mv($_GET['mvid']);
+    echo get_url_mv($_GET['mv']);
 }
 else
 {
