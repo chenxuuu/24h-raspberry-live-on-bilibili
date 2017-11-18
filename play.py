@@ -21,7 +21,7 @@ while True:
             if(seconds > 600):
                 print('too long,delete')
             else:
-                print('do something') #ffmpeg -i input.mp4 -ss **START_TIME** -t **STOP_TIME** -acodec copy -vcodec copy output.mp4
+                print('do something') #ffmpeg -i input.mp4 -ss **START_TIME** -t **STOP_TIME** -s 1280x720 -acodec copy -vcodec copy output.mp4
             print('mp3:'+f)
             print(f.replace(".mp3",'')+'.ass')#需改
             try:

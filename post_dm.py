@@ -9,10 +9,11 @@ import sys
 import datetime
 import time
 import ass_maker
+#需要修改的值
 
 path = 'E:\\onedrive\\wst\\24h-raspberry-live-on-bilibili'
+#本文件的路径，请修改
 
-#需要修改的值
 roomid = '3742025'
 #房间id（真实id，不一定是网址里的那个数）
 
@@ -28,7 +29,7 @@ def del_file(f):
     except:
         print('delete error')
 
-def get_download_url(s, t):
+def get_download_url(s, t, user, song = "nothing"):
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s})
     f = urllib.request.urlopen(download_api_url + "?%s" % params)
@@ -38,10 +39,10 @@ def get_download_url(s, t):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3')
-            ass_maker.make_ass(filename,'song'+str(s),path)
+            ass_maker.make_ass(filename,'song'+str(s),path) #需改
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
-            ass_maker.make_ass(filename,'mv'+str(s),path)
+            ass_maker.make_ass(filename,'mv'+str(s),path) #需改
         send_dm('下载完成，已加入播放队列')
         print('[log]已添加排队项目：'+t+str(s))
     except:
@@ -53,16 +54,16 @@ def get_download_url(s, t):
 
 
 
-def search_song(s):
+def search_song(s,user):
     print('[log]searching song:'+s)
     params = urllib.parse.urlencode({'type': 1, 's': s})
     f = urllib.request.urlopen("http://s.music.163.com/search/get/?%s" % params)
     search_result = json.loads(f.read().decode('utf-8'))
     result_id = search_result["result"]["songs"][0]["id"]
-    return get_download_url(result_id, 'id')
+    return get_download_url(result_id, 'id', user,s)
 
 
-def search_mv(s):
+def search_mv(s,user):
     url = "http://music.163.com/api/search/get/"
     postdata =urllib.parse.urlencode({	
     's':s,
@@ -82,7 +83,7 @@ def search_mv(s):
     req = urllib.request.Request(url,postdata,header)
     result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
     result_id = result['result']['mvs'][0]['id']
-    return get_download_url(result_id, 'mv')
+    return get_download_url(result_id, 'mv', user,s)
 
 
 
@@ -90,44 +91,44 @@ def search_mv(s):
 def pick_msg(s, user):
     if(s.find('mvid+') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('mvid+', '', 1), 'mv')
+        get_download_url(s.replace('mvid+', '', 1), 'mv',user)
     elif (s.find('mv+') == 0):
         try:
             send_dm('已收到'+user+'的指令')
-            search_mv(s.replace('mv+', '', 1))
+            search_mv(s.replace('mv+', '', 1),user)
         except:
             print('[log]mv not found')
             send_dm('出错了：没这mv')
     elif (s.find('song+') == 0):
         try:
             send_dm('已收到'+user+'的指令')
-            search_song(s.replace('song+', '', 1))
+            search_song(s.replace('song+', '', 1),user)
         except:
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('id+') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('id+', '', 1), 'id')
+        get_download_url(s.replace('id+', '', 1), 'id',user)
     elif(s.find('mvid') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('mvid', '', 1), 'mv')
+        get_download_url(s.replace('mvid', '', 1), 'mv',user)
     elif (s.find('mv') == 0):
         try:
             send_dm('已收到'+user+'的指令')
-            search_mv(s.replace('mv', '', 1))
+            search_mv(s.replace('mv', '', 1),user)
         except:
             print('[log]mv not found')
             send_dm('出错了：没这mv')
     elif (s.find('song') == 0):
         try:
             send_dm('已收到'+user+'的指令')
-            search_song(s.replace('song', '', 1))
+            search_song(s.replace('song', '', 1),user)
         except:
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('id') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('id', '', 1), 'id')
+        get_download_url(s.replace('id', '', 1), 'id',user)
     # else:
     #     print('not match anything')
 
