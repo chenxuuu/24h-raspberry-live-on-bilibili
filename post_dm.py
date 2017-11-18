@@ -9,19 +9,12 @@ import sys
 import datetime
 import time
 import ass_maker
-#需要修改的值
+import var_set
 
-path = '/home/pi/live'
-#本文件的路径，请修改
-
-roomid = '16703'
-#房间id（真实id，不一定是网址里的那个数）
-
-cookie = ''
-#发送弹幕用的cookie
-
-download_api_url = 'http://qq.papapoi.com/163/'
-#获取音乐链接的api网址，服务器性能有限，尽量请换成自己的，php文件在php文件夹
+path = var_set.path
+roomid = var_set.roomid
+cookie = var_set.cookie
+download_api_url = var_set.download_api_url
 
 def del_file(f):
     try:
@@ -44,6 +37,8 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N歌曲名（可能不对）："+song+"\\N点播人："+user,path)
         elif(t == 'mv'):
+            #send_dm('播放mv有点bug，修好之前不能用此功能')
+            #raise ValueError(e)
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
             if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
@@ -228,6 +223,7 @@ def test():
     print('ok')
 
 print('程序已启动，连接房间id：'+roomid)
+send_dm('弹幕监控已启动，可以点歌了')
 while True:
     try:
         get_dm_loop()
