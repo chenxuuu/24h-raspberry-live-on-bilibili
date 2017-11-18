@@ -14,7 +14,7 @@ import ass_maker
 path = 'E:\\onedrive\\wst\\24h-raspberry-live-on-bilibili'
 #本文件的路径，请修改
 
-roomid = '3742025'
+roomid = ''
 #房间id（真实id，不一定是网址里的那个数）
 
 cookie = ''
@@ -39,11 +39,17 @@ def get_download_url(s, t, user, song = "nothing"):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3')
-            ass_maker.make_ass(filename,'song'+str(s),path) #需改
+            if(song == "nothing")
+                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path)
+            else:
+                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N歌曲名（可能不对）："+song+"\\N点播人："+user,path)
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
-            ass_maker.make_ass(filename,'mv'+str(s),path) #需改
-        send_dm('下载完成，已加入播放队列')
+            if(song == "nothing")
+                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
+            else:
+                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV名（可能不对）："+song+"\\N点播人："+user,path)
+        send_dm('下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
     except:
         send_dm('出错了：下载出错，请换一首')
@@ -222,11 +228,8 @@ def test():
     print('ok')
 
 print('程序已启动，连接房间id：'+roomid)
-#print(get_dm())
-# while True:
-#     try:
-#         get_dm_loop()
-#     except:
-#         print('shit')
-pick_msg('song种太阳', 'test')
-print('done')
+while True:
+    try:
+        get_dm_loop()
+    except:
+        print('shit')

@@ -1,8 +1,4 @@
-#coding:utf-8
-
-
-def make_ass(filename, info, path):
-    file_content = '''[Script Info]
+﻿[Script Info]
 Title: Default ASS file
 ScriptType: v4.00+
 WrapStyle: 2
@@ -22,11 +18,7 @@ Style: right_up,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 2,0:00:00.00,99:00:00.00,left_down,,0,0,0,,'''+info+'''
-Dialogue: 2,0:00:00.00,99:00:00.00,right_down,,0,0,0,,基于树莓派3B，已开源\\N源码见https://github.com/chenxuuu/24h-raspberry-live-on-bilibili
+Dialogue: 2,0:00:00.00,99:00:00.00,left_down,,0,0,0,,当前没人点歌，播放的是临时up主自己的歌曲
+Dialogue: 2,0:00:00.00,99:00:00.00,right_down,,0,0,0,,基于树莓派3B，已开源\N源码见https://github.com/chenxuuu/24h-raspberry-live-on-bilibili
 Dialogue: 2,0:00:00.00,99:00:00.00,left_up,,0,0,0,,晨旭的树莓派点歌台~
-Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\\N发送song+音乐名，可搜索点歌\\N发送id+网易云歌曲id，可按id点歌\\N发送mv+MV名，可点播网易云MV\\N发送mvid+网易云MV id，可按id点MV\\N测试点歌台，功能不断完善中
-'''
-    file = open(path+'/downloads/'+str(filename)+'.ass','w')
-    file.write(file_content)
-    file.close()
+Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\N发送song+音乐名，可搜索点歌\N发送id+网易云歌曲id，可按id点歌\N发送mv+MV名，可点播网易云MV\N发送mvid+网易云MV id，可按id点MV\N测试点歌台，功能不断完善中
