@@ -17,6 +17,7 @@ def convert_time(n):
 while True:
     try:
         files = os.listdir(path+'/downloads')
+        files.sort()
         count=0
         for f in files:
             if(f.find('.mp3') != -1):
@@ -27,6 +28,7 @@ while True:
                     print('too long,delete')
                 else:
                     pic_files = os.listdir(path+'/default_pic')
+                    pic_files.sort()
                     pic_ran = random.randint(0,len(pic_files)-1)
                     print('ffmpeg -re -s 1280x720 -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -vcodec libx264 -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate 1000k -acodec aac -b:a 192k -f flv "'+rtmp+live_code+'"')
                     os.system('ffmpeg -re -s 1280x720 -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -vcodec libx264 -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate 1000k -acodec aac -b:a 192k -f flv "'+rtmp+live_code+'"')
@@ -49,7 +51,9 @@ while True:
         if(count == 0):
             print('no media')
             mp3_files = os.listdir(path+'/default_mp3')
+            mp3_files.sort()
             pic_files = os.listdir(path+'/default_pic')
+            pic_files.sort()
             mp3_ran = random.randint(0,len(mp3_files)-1)
             pic_ran = random.randint(0,len(pic_files)-1)
             audio = MP3(path+'/default_mp3/'+mp3_files[mp3_ran])
