@@ -12,10 +12,10 @@ function get_url_mv($id)
     $api = new NeteaseMusicAPI();
     $result = $api->mv($id);
     $data=json_decode($result, true);
-    $vurl = $data['data']['brs']['720'];
+    $vurl = $data['data']['brs']['480'];
     if($vurl == null)
     {
-        $vurl = $data['data']['brs']['480'];
+        $vurl = $data['data']['brs']['720'];
     }
     return $vurl;
 }
