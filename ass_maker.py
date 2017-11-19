@@ -1,6 +1,6 @@
 #coding:utf-8
 import os
-
+import time
 def make_ass(filename, info, path, ass = ''):
     ass = ass.replace('[','Dialogue: 2,0:')
     ass = ass.replace(']',',99:00:00.00,left_up,,0,0,0,,')

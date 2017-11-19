@@ -51,9 +51,12 @@ def get_download_url(s, t, user, song = "nothing"):
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
         send_dm('下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
-        log_file = open(path+'/songs.log', 'a')
-        log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
-        log_file.close()
+        try:
+            log_file = open(path+'/songs.log', 'a')
+            log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
+            log_file.close()
+        except:
+            print('[error]log error')
     except:
         send_dm('出错了：下载出错，请换一首或重试')
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
