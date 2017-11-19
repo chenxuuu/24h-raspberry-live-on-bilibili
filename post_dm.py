@@ -156,6 +156,7 @@ def pick_msg(s, user):
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')
         files.sort()
+        songs_count = 0
         for f in files:
             if(f.find('.info') != -1):
                 info_file = open(path+'/downloads/'+f, 'r')
@@ -164,7 +165,8 @@ def pick_msg(s, user):
                 finally:
                     info_file.close()
                 send_dm_long(all_the_text)
-        send_dm('歌曲列表展示完毕')
+                songs_count += 1
+        send_dm('歌曲列表展示完毕，一共'+str(songs_count)+'首')
     # else:
     #     print('not match anything')
 
