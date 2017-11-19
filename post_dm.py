@@ -35,7 +35,7 @@ def get_download_url(s, t, user, song = "nothing"):
             if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path)
             else:
-                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N歌曲名（可能不对）："+song+"\\N点播人："+user,path)
+                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path)
         elif(t == 'mv'):
             #send_dm('播放mv有点bug，修好之前不能用此功能')
             #raise ValueError(e)
@@ -43,11 +43,11 @@ def get_download_url(s, t, user, song = "nothing"):
             if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
             else:
-                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV名（可能不对）："+song+"\\N点播人："+user,path)
+                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
         send_dm('下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
     except:
-        send_dm('出错了：下载出错，请换一首')
+        send_dm('出错了：下载出错，请换一首或重试')
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
@@ -87,9 +87,10 @@ def search_mv(s,user):
     return get_download_url(result_id, 'mv', user,s)
 
 
-
+jump_to_next_counter = 0
 
 def pick_msg(s, user):
+    global jump_to_next_counter
     if(s.find('mvid+') == 0):
         send_dm('已收到'+user+'的指令')
         get_download_url(s.replace('mvid+', '', 1), 'mv',user)
@@ -130,6 +131,23 @@ def pick_msg(s, user):
     elif (s.find('id') == 0):
         send_dm('已收到'+user+'的指令')
         get_download_url(s.replace('id', '', 1), 'id',user)
+    elif (s.find('点歌') == 0):
+        try:
+            send_dm('已收到'+user+'的指令')
+            search_song(s.replace('点歌', '', 1),user)
+        except:
+            print('[log]song not found')
+            send_dm('出错了：没这首歌')
+    elif (s.find('喵') > -1):
+        send_dm('喵？？')  #用于测试是否崩掉
+    elif (s == '切歌'):
+        jump_to_next_counter += 1
+        if(jump_to_next_counter < 5):
+            send_dm('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
+        else:
+            jump_to_next_counter = 0
+            send_dm('已执行切歌动作')
+            os.system('killall ffmpeg')
     # else:
     #     print('not match anything')
 
