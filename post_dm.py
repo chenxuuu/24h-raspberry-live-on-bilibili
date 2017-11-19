@@ -161,8 +161,16 @@ def pick_msg(s, user):
         files.sort()
         songs_count = 0
         for f in files:
-            if(f.find('.info') != -1):
-                info_file = open(path+'/downloads/'+f, 'r')
+            if(f.find('.mp3') != -1):
+                info_file = open(path+'/downloads/'+f.replace(".mp3",'')+'.info', 'r')
+                try:
+                    all_the_text = info_file.read()
+                finally:
+                    info_file.close()
+                send_dm_long(all_the_text)
+                songs_count += 1
+            if(f.find('.mp4') != -1):
+                info_file = open(path+'/downloads/'+f.replace(".mp4",'')+'.info', 'r')
                 try:
                     all_the_text = info_file.read()
                 finally:
