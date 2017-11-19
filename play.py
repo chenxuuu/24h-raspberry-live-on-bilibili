@@ -35,6 +35,7 @@ while True:
                 try:
                     os.remove(path+'/downloads/'+f)
                     os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.ass')
+                    os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.info')
                 except:
                     print('delete error')
                 count+=1
@@ -45,6 +46,7 @@ while True:
                 try:
                     os.remove(path+'/downloads/'+f)
                     os.remove(path+'/downloads/'+f.replace(".mp4",'')+'.ass')
+                    os.remove(path+'/downloads/'+f.replace(".mp4",'')+'.info')
                 except:
                     print('delete error')
                 count+=1

@@ -34,16 +34,18 @@ def get_download_url(s, t, user, song = "nothing"):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3')
             if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path)
+                ass_maker.make_info(filename,'id：'+str(s)+",点播人："+user,path)
             else:
                 ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path)
+                ass_maker.make_info(filename,'id：'+str(s)+",点的："+song+",点播人："+user,path)
         elif(t == 'mv'):
-            #send_dm('播放mv有点bug，修好之前不能用此功能')
-            #raise ValueError(e)
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
             if(song == "nothing"):
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
+                ass_maker.make_info(filename,'MVid：'+str(s)+",点播人："+user,path)
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
+                ass_maker.make_ass(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
         send_dm('下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
     except:
@@ -91,6 +93,8 @@ jump_to_next_counter = 0
 
 def pick_msg(s, user):
     global jump_to_next_counter
+    if(user == '接待喵'):  #防止自循环
+        return
     if(s.find('mvid+') == 0):
         send_dm('已收到'+user+'的指令')
         get_download_url(s.replace('mvid+', '', 1), 'mv',user)
@@ -148,6 +152,19 @@ def pick_msg(s, user):
             jump_to_next_counter = 0
             send_dm('已执行切歌动作')
             os.system('killall ffmpeg')
+    elif (s == '歌曲列表'):
+        send_dm_long('已收到'+user+'的指令，正在查询')
+        files = os.listdir(path+'/downloads')
+        files.sort()
+        for f in files:
+            if(f.find('.info') != -1):
+                info_file = open(path+'/downloads/'+f, 'r')
+                try:
+                    all_the_text = info_file.read()
+                finally:
+                    info_file.close()
+                send_dm_long(all_the_text)
+        send_dm('歌曲列表展示完毕')
     # else:
     #     print('not match anything')
 
