@@ -32,11 +32,14 @@ def get_download_url(s, t, user, song = "nothing"):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3')
+            lyric_get = urllib.parse.urlencode({'lyric': s})
+            lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get)
+            lyric = lyric_w.read().decode('utf-8')
             if(song == "nothing"):
-                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path)
+                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path,lyric)
                 ass_maker.make_info(filename,'id：'+str(s)+",点播人："+user,path)
             else:
-                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path)
+                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric)
                 ass_maker.make_info(filename,'id：'+str(s)+",点的："+song+",点播人："+user,path)
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
