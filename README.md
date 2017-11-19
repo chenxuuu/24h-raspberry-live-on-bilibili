@@ -62,13 +62,13 @@ sudo apt-get install libvpx-dev
 
 编译并安装ffmpeg（时间较长，半小时左右）：
 ```Bash
-git clone git://source.ffmpeg.org/ffmpeg.git
-cd ffmpeg
-sudo ./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --enable-libass --enable-libfreetype
+wget http://ffmpeg.org/releases/ffmpeg-3.3.2.tar.bz2
+tar jxvf ffmpeg-3.3.2.tar.bz2
+cd ffmpeg-3.3.2
+sudo ./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --enable-libass --enable-libfreetype  --enable-omx --enable-omx-rpi --enable-encoder=h264_omx --enable-mmal --enable-hwaccel=h264_mmal --enable-decoder=h264_mmal
 make -j4
 sudo make install
 cd ..
-rm -rf ffmpeg
 ```
 （以上有一部分代码参考自[ffmpeg源码编译安装（Compile ffmpeg with source）  Part 2 ： 扩展安装 - 人脑之战 - 博客园](http://www.cnblogs.com/yaoz/p/6944942.html)）
 
