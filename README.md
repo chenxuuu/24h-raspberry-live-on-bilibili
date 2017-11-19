@@ -82,6 +82,20 @@ sudo pip3 install mutagen
 sudo apt-get install screen
 ```
 
+安装中文字体
+```Bash
+apt install fontconfig
+apt-get install ttf-mscorefonts-installer
+apt-get install -y --force-yes --no-install-recommends fonts-wqy-microhei
+apt-get install -y --force-yes --no-install-recommends ttf-wqy-zenhei
+#可能有装不上的，应该问题不大
+
+# 查看中文字体 --确认字体是否安装成功
+fc-list :lang=zh-cn
+```
+（字体安装来自[ubuntu下 bilibili直播推流 ffmpeg rtmp推送](https://ppx.ink/2.ppx)）
+
+
 ### 下载&运行：
 下载本项目：
 ```
