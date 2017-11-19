@@ -48,7 +48,7 @@ def get_download_url(s, t, user, song = "nothing"):
                 ass_maker.make_info(filename,'MVid：'+str(s)+",点播人："+user,path)
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
-                ass_maker.make_ass(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
+                ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
         send_dm('下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
         log_file = open(path+'/songs.log', 'a')
