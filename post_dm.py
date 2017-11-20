@@ -17,7 +17,6 @@ roomid = var_set.roomid
 cookie = var_set.cookie
 download_api_url = var_set.download_api_url
 
-down_lock = False
 dm_lock = False
 
 def del_file(f):
@@ -27,15 +26,11 @@ def del_file(f):
         print('delete error')
 
 def get_download_url(s, t, user, song = "nothing"):
-    global down_lock
+    send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s})
     f = urllib.request.urlopen(download_api_url + "?%s" % params)
     url = f.read().decode('utf-8')
-    send_dm_long('正在排队下载'+t+str(s))
-    while (down_lock):
-        time.sleep(1)
-    down_lock = True
     try:
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
@@ -70,20 +65,15 @@ def get_download_url(s, t, user, song = "nothing"):
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
-    down_lock = False
     return url
 
 def download_bilibili(video_url,user):
-    global down_lock
     try:
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
         video_title = video_info['title']
-        send_dm_long('正在排队下载'+video_title)
+        send_dm_long('正在下载'+video_title)
         send_dm('注意，视频下载十分费时，请耐心等待')
-        while (down_lock):
-            time.sleep(1)
-        down_lock = True
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
         ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
@@ -91,7 +81,6 @@ def download_bilibili(video_url,user):
         send_dm_long('番剧'+video_title+'下载完成，已加入播放队列排队播放')
     except:
         send_dm('出错了：可能下载时炸了')
-    down_lock = False
         
 
 def search_song(s,user):
