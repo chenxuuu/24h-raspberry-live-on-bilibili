@@ -2,8 +2,10 @@
 import os
 import time
 def make_ass(filename, info, path, ass = ''):
+    ass = ass.replace('[','Dialogue: 2,0:',40)
+    ass = ass.replace(']',',99:00:00.00,left_up,,0,0,0,,',40)
     ass = ass.replace('[','Dialogue: 2,0:')
-    ass = ass.replace(']',',99:00:00.00,left_up,,0,0,0,,')
+    ass = ass.replace(']',',99:00:00.00,center_up,,0,0,0,,')
     file_content = '''[Script Info]
 Title: Default ASS file
 ScriptType: v4.00+
@@ -21,6 +23,7 @@ Style: left_down,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0
 Style: right_down,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,3,10,10,5,1
 Style: left_up,微软雅黑,15,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,7,10,10,5,1
 Style: right_up,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,9,10,10,5,1
+Style: center_up,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,8,10,10,5,1
 Style: center_down,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,2,10,10,5,1
 
 [Events]
