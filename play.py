@@ -20,7 +20,7 @@ while True:
         files.sort()
         count=0
         for f in files:
-            if(f.find('.mp3') != -1):
+            if((f.find('.mp3') != -1) and (f.find('.download') == -1)):
                 audio = MP3(path+'/downloads/'+f)
                 seconds=audio.info.length   #获取时长
                 print('mp3 long:'+convert_time(seconds))
@@ -39,7 +39,7 @@ while True:
                 except:
                     print('delete error')
                 count+=1
-            if(f.find('.mp4') != -1):
+            if((f.find('.mp4') != -1) and (f.find('.download') == -1)):
                 print('mp4:'+f)
                 print('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp4",'')+'.ass" -vcodec libx264 -preset ultrafast -acodec aac -b:a 192k -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp4",'')+'.ass" -vcodec libx264 -preset ultrafast -acodec aac -b:a 192k -f flv "'+rtmp+live_code+'"')

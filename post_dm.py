@@ -64,7 +64,18 @@ def get_download_url(s, t, user, song = "nothing"):
         del_file(filename+'.mp4')
     return url
 
-
+def download_bilibili(video_url,user):
+    print('[log]downloading bilibili video:'+str(video_url))
+    video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
+    video_title = video_info['title']
+    send_dm_long('已启动下载'+video_title)
+    send_dm('注意，视频下载十分费时，请耐心等待')
+    send_dm('可能会下载十几分钟，下载时不响应弹幕命令')
+    filename = str(time.mktime(datetime.datetime.now().timetuple()))
+    os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
+    ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
+    ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
+    send_dm('番剧下载完成，已加入播放队列排队播放')
 
 def search_song(s,user):
     print('[log]searching song:'+s)
@@ -184,6 +195,16 @@ def pick_msg(s, user):
                 send_dm_long(all_the_text)
                 songs_count += 1
         send_dm('歌曲列表展示完毕，一共'+str(songs_count)+'首')
+    elif (s.find('番剧') == 0):
+        try:
+            send_dm('已收到'+user+'的指令')
+            #番剧aaa/bbb
+            ture_url=s.replace('.','/play#')
+            ture_url=ture_url.replace('番剧','https://bangumi.bilibili.com/anime/')
+            download_bilibili(ture_url,user)
+        except:
+            print('[log]song not found')
+            send_dm('出错了：可能下载时炸了')
     # else:
     #     print('not match anything')
 

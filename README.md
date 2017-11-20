@@ -72,9 +72,14 @@ cd ..
 ```
 （以上有一部分代码参考自[ffmpeg源码编译安装（Compile ffmpeg with source）  Part 2 ： 扩展安装 - 人脑之战 - 博客园](http://www.cnblogs.com/yaoz/p/6944942.html)）
 
-安装python3的一个库：
+安装python3的mutagen库：
 ```
 sudo pip3 install mutagen
+```
+
+安装python3的you-get库：
+```
+sudo pip3 install you-get
 ```
 
 安装screen:

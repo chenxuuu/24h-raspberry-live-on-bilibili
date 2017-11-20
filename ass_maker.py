@@ -29,9 +29,9 @@ Style: center_down,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 2,0:00:00.00,99:00:00.00,left_down,,0,0,0,,'''+info+'''\\N要放完才放下一首哦
-Dialogue: 2,0:00:00.00,99:00:00.00,right_down,,0,0,0,,基于树莓派3B\\N已开源，源码见https://biu.ee/pi-live\\NCPU '''+os.popen('vcgencmd measure_temp').readline()+'\\N'+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+'''
+Dialogue: 2,0:00:00.00,99:00:00.00,right_down,,0,0,0,,基于树莓派3B\\N已开源，源码见https://biu.ee/pi-live\\NCPU '''+os.popen('vcgencmd measure_temp').readline()+'\\N'+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())).replace('\r','').replace('\n','')+'''
 Dialogue: 2,0:00:00.00,99:00:00.00,left_up,,0,0,0,,晨旭的树莓派点歌台~下面是歌词哦↓
-Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\\N发送song+音乐名，可搜索点歌\\N发送id+网易云歌曲id，可按id点歌\\N发送mv+MV名，可点播网易云MV\\N发送mvid+网易云MV id，可按id点MV\\N请点播十分钟内的歌曲\\N发送“切歌”累计五次，可强制切歌\\N发送“歌曲列表”，可查询正在排队的歌曲\\N测试点歌台，功能不断完善中
+Dialogue: 2,0:00:00.00,99:00:00.00,right_up,,0,0,0,,弹幕点歌方法：\\N发送song+音乐名，可搜索点歌\\N发送id+网易云歌曲id，可按id点歌\\N发送mv+MV名，可点播网易云MV\\N发送mvid+网易云MV id，可按id点MV\\N请点播十分钟内的歌曲\\N发送“切歌”累计五次，可强制切歌\\N发送“歌曲列表”，可查询正在排队的歌曲\\N发送“番剧番剧号.视频号”可点播番剧\\N例：https://bangumi.bilibili.com/anime/1056/play#18902\\N发送“番剧1056.18902”即可点播该番剧，请勿加空格\\N测试点歌台，功能不断完善中
 '''+ass
     file = open(path+'/downloads/'+str(filename)+'.ass','w')
     file.write(file_content)
