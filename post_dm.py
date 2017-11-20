@@ -10,11 +10,15 @@ import datetime
 import time
 import ass_maker
 import var_set
+import _thread
 
 path = var_set.path
 roomid = var_set.roomid
 cookie = var_set.cookie
 download_api_url = var_set.download_api_url
+
+down_lock = False
+dm_lock = False
 
 def del_file(f):
     try:
@@ -23,11 +27,15 @@ def del_file(f):
         print('delete error')
 
 def get_download_url(s, t, user, song = "nothing"):
+    global down_lock
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s})
     f = urllib.request.urlopen(download_api_url + "?%s" % params)
     url = f.read().decode('utf-8')
-    send_dm('已启动下载'+t+str(s))
+    send_dm_long('正在排队下载'+t+str(s))
+    while (down_lock):
+        time.sleep(1)
+    down_lock = True
     try:
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         if(t == 'id'):
@@ -49,7 +57,7 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
-        send_dm('下载完成，已加入播放队列排队播放')
+        send_dm_long(t+str(s)+'下载完成，已加入播放队列排队播放')
         print('[log]已添加排队项目：'+t+str(s))
         try:
             log_file = open(path+'/songs.log', 'a')
@@ -62,20 +70,29 @@ def get_download_url(s, t, user, song = "nothing"):
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
+    down_lock = False
     return url
 
 def download_bilibili(video_url,user):
-    print('[log]downloading bilibili video:'+str(video_url))
-    video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
-    video_title = video_info['title']
-    send_dm_long('已启动下载'+video_title)
-    send_dm('注意，视频下载十分费时，请耐心等待')
-    send_dm('可能会下载十几分钟，下载时不响应弹幕命令')
-    filename = str(time.mktime(datetime.datetime.now().timetuple()))
-    os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
-    ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
-    ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
-    send_dm('番剧下载完成，已加入播放队列排队播放')
+    global down_lock
+    try:
+        print('[log]downloading bilibili video:'+str(video_url))
+        video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
+        video_title = video_info['title']
+        send_dm_long('正在排队下载'+video_title)
+        send_dm('注意，视频下载十分费时，请耐心等待')
+        while (down_lock):
+            time.sleep(1)
+        down_lock = True
+        filename = str(time.mktime(datetime.datetime.now().timetuple()))
+        os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
+        ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
+        ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
+        send_dm_long('番剧'+video_title+'下载完成，已加入播放队列排队播放')
+    except:
+        send_dm('出错了：可能下载时炸了')
+    down_lock = False
+        
 
 def search_song(s,user):
     print('[log]searching song:'+s)
@@ -83,7 +100,7 @@ def search_song(s,user):
     f = urllib.request.urlopen("http://s.music.163.com/search/get/?%s" % params)
     search_result = json.loads(f.read().decode('utf-8'))
     result_id = search_result["result"]["songs"][0]["id"]
-    return get_download_url(result_id, 'id', user,s)
+    _thread.start_new_thread(get_download_url, (result_id, 'id', user,s))
 
 
 def search_mv(s,user):
@@ -106,7 +123,7 @@ def search_mv(s,user):
     req = urllib.request.Request(url,postdata,header)
     result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
     result_id = result['result']['mvs'][0]['id']
-    return get_download_url(result_id, 'mv', user,s)
+    _thread.start_new_thread(get_download_url, (result_id, 'mv', user,s))
 
 
 jump_to_next_counter = 0
@@ -117,7 +134,7 @@ def pick_msg(s, user):
         return
     if(s.find('mvid+') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('mvid+', '', 1), 'mv',user)
+        _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
         try:
             send_dm('已收到'+user+'的指令')
@@ -134,10 +151,10 @@ def pick_msg(s, user):
             send_dm('出错了：没这首歌')
     elif (s.find('id+') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('id+', '', 1), 'id',user)
+        _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('mvid', '', 1), 'mv',user)
+        _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
         try:
             send_dm('已收到'+user+'的指令')
@@ -154,7 +171,7 @@ def pick_msg(s, user):
             send_dm('出错了：没这首歌')
     elif (s.find('id') == 0):
         send_dm('已收到'+user+'的指令')
-        get_download_url(s.replace('id', '', 1), 'id',user)
+        _thread.start_new_thread(get_download_url, (s.replace('id', '', 1), 'id',user))
     elif (s.find('点歌') == 0):
         try:
             send_dm('已收到'+user+'的指令')
@@ -178,20 +195,22 @@ def pick_msg(s, user):
         files.sort()
         songs_count = 0
         for f in files:
-            if(f.find('.mp3') != -1):
-                info_file = open(path+'/downloads/'+f.replace(".mp3",'')+'.info', 'r')
+            if((f.find('.mp3') != -1) and (f.find('.download') == -1)):
                 try:
+                    info_file = open(path+'/downloads/'+f.replace(".mp3",'')+'.info', 'r')
                     all_the_text = info_file.read()
-                finally:
                     info_file.close()
+                except Exception as e:
+                    print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-            if(f.find('.mp4') != -1):
-                info_file = open(path+'/downloads/'+f.replace(".mp4",'')+'.info', 'r')
+            if((f.find('.mp4') != -1) and (f.find('.download') == -1)):
                 try:
+                    info_file = open(path+'/downloads/'+f.replace(".mp4",'')+'.info', 'r')
                     all_the_text = info_file.read()
-                finally:
                     info_file.close()
+                except Exception as e:
+                    print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
         send_dm('歌曲列表展示完毕，一共'+str(songs_count)+'首')
@@ -201,10 +220,9 @@ def pick_msg(s, user):
             #番剧aaa/bbb
             ture_url=s.replace('.','/play#')
             ture_url=ture_url.replace('番剧','https://bangumi.bilibili.com/anime/')
-            download_bilibili(ture_url,user)
+            _thread.start_new_thread(download_bilibili, (ture_url,user))
         except:
-            print('[log]song not found')
-            send_dm('出错了：可能下载时炸了')
+            print('[log]video not found')
     # else:
     #     print('not match anything')
 
@@ -216,33 +234,42 @@ def pick_msg(s, user):
 def send_dm(s):
     global cookie
     global roomid
-    url = "http://api.live.bilibili.com/msg/send"
-    postdata =urllib.parse.urlencode({	
-    'color':'16777215',
-    'fontsize':'25',
-    'mode':'1',
-    'msg':s,
-    'rnd':'1510756027',
-    'roomid':roomid
-    }).encode('utf-8')
-    header = {
-    "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Encoding":"utf-8",
-    "Accept-Language":"zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
-    "Connection":"keep-alive",
-    "Cookie":cookie,
-    "Host":"api.live.bilibili.com",
-    "Referer":"http://live.bilibili.com/"+roomid,
-    "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
-    }
-    req = urllib.request.Request(url,postdata,header)
-    dm_result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
-    if len(dm_result['msg']) > 0:
-        print('[error]弹幕发送失败：'+s)
-        print(dm_result)
-    else:
-        print('[log]发送弹幕：'+s)
+    global dm_lock
+    while (dm_lock):
+        #print('[log]wait for send dm')
+        time.sleep(1)
+    dm_lock = True
+    try:
+        url = "http://api.live.bilibili.com/msg/send"
+        postdata =urllib.parse.urlencode({	
+        'color':'16777215',
+        'fontsize':'25',
+        'mode':'1',
+        'msg':s,
+        'rnd':'1510756027',
+        'roomid':roomid
+        }).encode('utf-8')
+        header = {
+        "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Encoding":"utf-8",
+        "Accept-Language":"zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+        "Connection":"keep-alive",
+        "Cookie":cookie,
+        "Host":"api.live.bilibili.com",
+        "Referer":"http://live.bilibili.com/"+roomid,
+        "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
+        }
+        req = urllib.request.Request(url,postdata,header)
+        dm_result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+        if len(dm_result['msg']) > 0:
+            print('[error]弹幕发送失败：'+s)
+            print(dm_result)
+        else:
+            print('[log]发送弹幕：'+s)
+    except:
+        print('[error]send dm error')
     time.sleep(1.5)
+    dm_lock = False
     
 def send_dm_long(s):
     n=20
@@ -302,5 +329,7 @@ send_dm('弹幕监控已启动，可以点歌了')
 while True:
     try:
         get_dm_loop()
-    except:
+    except Exception as e:
         print('shit')
+        print(e)
+        dm_lock = False
