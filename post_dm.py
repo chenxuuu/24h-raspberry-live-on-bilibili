@@ -52,7 +52,7 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
-        send_dm_long(t+str(s)+'下载完成，已加入播放队列排队播放')
+        send_dm_long(t+str(s)+'下载完成，已加入播放队列')
         print('[log]已添加排队项目：'+t+str(s))
         try:
             log_file = open(path+'/songs.log', 'a')
@@ -76,12 +76,26 @@ def download_bilibili(video_url,user):
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
-        ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
-        ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
-        send_dm_long('番剧'+video_title+'下载完成，已加入播放队列排队播放')
+        ass_maker.make_ass(filename,'视频：'+video_title+"\\N点播人："+user,path)
+        ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
+        send_dm_long('视频'+video_title+'下载完成，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
         
+def download_av(video_url,user):
+    try:
+        print('[log]downloading bilibili video:'+str(video_url))
+        video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
+        video_title = video_info['title']
+        send_dm_long('正在下载'+video_title)
+        send_dm('注意，视频下载十分费时，请耐心等待')
+        filename = str(time.mktime(datetime.datetime.now().timetuple()))
+        os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
+        ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
+        ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
+        send_dm_long('视频'+video_title+'下载完成，已加入播放队列')
+    except:
+        send_dm('出错了：可能下载时炸了')
 
 def search_song(s,user):
     print('[log]searching song:'+s)
@@ -178,7 +192,7 @@ def pick_msg(s, user):
             jump_to_next_counter = 0
             send_dm('已执行切歌动作')
             os.system('killall ffmpeg')
-    elif (s == '歌曲列表'):
+    elif ((s == '点播列表') or (s == '歌曲列表')):
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')
         files.sort()
@@ -202,7 +216,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm('歌曲列表展示完毕，一共'+str(songs_count)+'首')
+        send_dm('点播列表展示完毕，一共'+str(songs_count)+'首')
     elif (s.find('番剧') == 0):
         try:
             send_dm('已收到'+user+'的指令')
@@ -210,6 +224,21 @@ def pick_msg(s, user):
             ture_url=s.replace('.','/play#')
             ture_url=ture_url.replace('番剧','https://bangumi.bilibili.com/anime/')
             _thread.start_new_thread(download_bilibili, (ture_url,user))
+        except:
+            print('[log]video not found')
+    elif (s.find('av') == 0):
+        try:
+            if(s.find('p') == -1):
+                send_dm('已收到'+user+'的指令')
+                #avxxxxx
+                ture_url=s.replace('av','https://www.bilibili.com/video/av')
+                _thread.start_new_thread(download_av, (ture_url,user))
+            else:
+                send_dm('已收到'+user+'的指令')
+                #avxxxx/#page=x
+                ture_url=s.replace('p','/#page=')
+                ture_url=ture_url.replace('av','https://www.bilibili.com/video/av')
+                _thread.start_new_thread(download_av, (ture_url,user))
         except:
             print('[log]video not found')
     # else:
