@@ -17,3 +17,9 @@ download_api_url = 'http://qq.papapoi.com/163/'
 rtmp = 'rtmp://txy.live-send.acg.tv/live-txy/'
 #直播给的两个码，填在这里
 live_code = ''
+
+
+free_space=15360
+
+#允许视频占用空间大小，超过时禁止下载视频，单位：MiB
+

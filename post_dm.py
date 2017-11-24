@@ -19,6 +19,16 @@ download_api_url = var_set.download_api_url
 
 dm_lock = False
 
+def check_free():
+    files = os.listdir(path+'/downloads')
+    size = 0
+    for f in files:
+        size += os.path.getsize(path+'/downloads/'+f)
+    if(size > var_set.free_space*1024*1024):
+        return True
+    else:
+        return False
+
 def del_file(f):
     try:
         os.remove(path+'/downloads/'+f)
@@ -26,6 +36,9 @@ def del_file(f):
         print('delete error')
 
 def get_download_url(s, t, user, song = "nothing"):
+    if(check_free()):
+        send_dm_long('已下载空间占用超过阈值')
+        return
     send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s})
@@ -68,6 +81,9 @@ def get_download_url(s, t, user, song = "nothing"):
     return url
 
 def download_bilibili(video_url,user):
+    if(check_free()):
+        send_dm_long('已下载空间占用超过阈值')
+        return
     try:
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
@@ -83,6 +99,9 @@ def download_bilibili(video_url,user):
         send_dm('出错了：可能下载时炸了')
         
 def download_av(video_url,user):
+    if(check_free()):
+        send_dm_long('已下载空间占用超过阈值')
+        return
     try:
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
