@@ -18,6 +18,7 @@ cookie = var_set.cookie
 download_api_url = var_set.download_api_url
 
 dm_lock = False
+encode_lock = False
 
 def check_free():
     files = os.listdir(path+'/downloads')
@@ -67,13 +68,16 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
-            send_dm_long(t+str(s)+'下载完成，正在进行渲染')
-            send_dm('渲染时常约为两倍视频长度')
+            send_dm_long(t+str(s)+'下载完成，等待渲染')
+            while (encode_lock):
+                time.sleep(1)
+            encode_lock = True
+            send_dm_long(t+str(s)+'正在渲染')
             os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             del_file(filename+'.mp4')
             os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
             send_dm_long(t+str(s)+'渲染完毕，已加入播放队列')
-
+            encode_lock = False
         try:
             log_file = open(path+'/songs.log', 'a')
             log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
@@ -103,13 +107,18 @@ def download_bilibili(video_url,user):
         ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
         send_dm_long('番剧'+video_title+'下载完成，正在渲染')
-        send_dm('渲染时常约为数倍视频长度')
+        send_dm_long('番剧'+video_title+'下载完成，等待渲染')
+        while (encode_lock):
+            time.sleep(1)
+        encode_lock = True
+        send_dm_long('番剧'+video_title+'正在渲染')
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
         send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
+    encode_lock = False
         
 def download_av(video_url,user):
     if(check_free()):
@@ -124,14 +133,18 @@ def download_av(video_url,user):
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
-        send_dm_long('视频'+video_title+'下载完成，正在渲染')
-        send_dm('渲染时常约为数倍视频长度')
+        send_dm_long('视频'+video_title+'下载完成，等待渲染')
+        while (encode_lock):
+            time.sleep(1)
+        encode_lock = True
+        send_dm_long('视频'+video_title+'正在渲染')
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
+    encode_lock = False
 
 def search_song(s,user):
     print('[log]searching song:'+s)
@@ -243,7 +256,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-            if((f.find('.flv') != -1) and (f.find('.download') == -1)):
+            if((f.find('.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):
                 try:
                     info_file = open(path+'/downloads/'+f.replace(".flv",'')+'.info', 'r')
                     all_the_text = info_file.read()
@@ -277,6 +290,8 @@ def pick_msg(s, user):
                 _thread.start_new_thread(download_av, (ture_url,user))
         except:
             print('[log]video not found')
+    elif (s.find('温度') > -1):
+        send_dm_long(os.popen('vcgencmd measure_temp').readline())
     # else:
     #     print('not match anything')
 
@@ -387,3 +402,4 @@ while True:
         print('shit')
         print(e)
         dm_lock = False
+        encode_lock = False
