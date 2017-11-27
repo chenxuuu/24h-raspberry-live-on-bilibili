@@ -57,6 +57,8 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric)
                 ass_maker.make_info(filename,'id：'+str(s)+",点的："+song+",点播人："+user,path)
+            send_dm_long(t+str(s)+'下载完成，已加入播放队列')
+            print('[log]已添加排队项目：'+t+str(s))
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
             if(song == "nothing"):
@@ -65,8 +67,13 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
-        send_dm_long(t+str(s)+'下载完成，已加入播放队列')
-        print('[log]已添加排队项目：'+t+str(s))
+            send_dm_long(t+str(s)+'下载完成，正在进行渲染')
+            send_dm('渲染时常约为两倍视频长度')
+            os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+            del_file(filename+'.mp4')
+            os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+            send_dm_long(t+str(s)+'渲染完毕，已加入播放队列')
+
         try:
             log_file = open(path+'/songs.log', 'a')
             log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
@@ -78,6 +85,7 @@ def get_download_url(s, t, user, song = "nothing"):
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
+        del_file(filename+'.flv')
     return url
 
 def download_bilibili(video_url,user):
@@ -91,10 +99,15 @@ def download_bilibili(video_url,user):
         send_dm_long('正在下载'+video_title)
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
-        os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
-        ass_maker.make_ass(filename,'视频：'+video_title+"\\N点播人："+user,path)
-        ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
-        send_dm_long('视频'+video_title+'下载完成，已加入播放队列')
+        os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
+        ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
+        ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
+        send_dm_long('番剧'+video_title+'下载完成，正在渲染')
+        send_dm('渲染时常约为数倍视频长度')
+        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        del_file(filename+'rendering1.flv')
+        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+        send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
         
@@ -106,13 +119,17 @@ def download_av(video_url,user):
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
         video_title = video_info['title']
-        send_dm_long('正在下载'+video_title)
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
-        os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'.mp4')
+        os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
-        send_dm_long('视频'+video_title+'下载完成，已加入播放队列')
+        send_dm_long('视频'+video_title+'下载完成，正在渲染')
+        send_dm('渲染时常约为数倍视频长度')
+        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        del_file(filename+'rendering1.flv')
+        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+        send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
 
@@ -226,9 +243,9 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-            if((f.find('.mp4') != -1) and (f.find('.download') == -1)):
+            if((f.find('.flv') != -1) and (f.find('.download') == -1)):
                 try:
-                    info_file = open(path+'/downloads/'+f.replace(".mp4",'')+'.info', 'r')
+                    info_file = open(path+'/downloads/'+f.replace(".flv",'')+'.info', 'r')
                     all_the_text = info_file.read()
                     info_file.close()
                 except Exception as e:
