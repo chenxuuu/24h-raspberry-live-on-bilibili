@@ -37,6 +37,7 @@ def del_file(f):
         print('delete error')
 
 def get_download_url(s, t, user, song = "nothing"):
+    global encode_lock
     if(check_free()):
         send_dm_long('已下载空间占用超过阈值')
         return
@@ -93,6 +94,7 @@ def get_download_url(s, t, user, song = "nothing"):
     return url
 
 def download_bilibili(video_url,user):
+    global encode_lock
     if(check_free()):
         send_dm_long('已下载空间占用超过阈值')
         return
@@ -121,6 +123,7 @@ def download_bilibili(video_url,user):
     encode_lock = False
         
 def download_av(video_url,user):
+    global encode_lock
     if(check_free()):
         send_dm_long('已下载空间占用超过阈值')
         return
@@ -291,7 +294,7 @@ def pick_msg(s, user):
         except:
             print('[log]video not found')
     elif (s.find('温度') > -1):
-        send_dm_long(os.popen('vcgencmd measure_temp').readline())
+        send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())
     # else:
     #     print('not match anything')
 
