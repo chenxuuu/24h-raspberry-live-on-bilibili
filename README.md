@@ -114,6 +114,8 @@ git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 请修改下载里的`var_set.py`文件中的各种变量
 其中，`cookie`需要使用小号（大号也行）在直播间，打开浏览器审查元素，先发一条弹幕，再查看`network`选项卡，找到`name`为`send`的项目，`Request head`中的`Cookie`即为`cookie`变量的值。注意设置后，账号不能点击网页上的“退出登陆”按键，换账号请直接清除当前cookie再刷新
 
+`post_dm.py`文件的`if(user == '接待喵'):  #防止自循环`请改为你的机器人的名字
+
 如有条件，请`务必`自己搭建php的下载链接解析服务，源码都在`php`文件夹内
 
 `default_mp3`文件夹内放入mp3格式的音乐，在无人点歌时播放，请尽量保证文件名全英文
