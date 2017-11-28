@@ -39,7 +39,7 @@ while True:
                 except:
                     print('delete error')
                 count+=1
-            if((f.find('.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):
+            if((f.find('ok.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):
                 print('flv:'+f)
                 print('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')

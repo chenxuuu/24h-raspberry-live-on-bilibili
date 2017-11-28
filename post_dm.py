@@ -78,7 +78,7 @@ def get_download_url(s, t, user, song = "nothing"):
             os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             encode_lock = False
             del_file(filename+'.mp4')
-            os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+            os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
             send_dm_long(t+str(s)+'渲染完毕，已加入播放队列')
         try:
             log_file = open(path+'/songs.log', 'a')
@@ -117,7 +117,7 @@ def download_bilibili(video_url,user):
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
-        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
         send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
@@ -135,6 +135,7 @@ def download_av(video_url,user):
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
+        print('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
         send_dm_long('视频'+video_title+'下载完成，等待渲染，请耐心等待')
@@ -145,7 +146,7 @@ def download_av(video_url,user):
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
-        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
+        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
@@ -186,6 +187,7 @@ jump_to_next_counter = 0
 
 def pick_msg(s, user):
     global jump_to_next_counter
+    global encode_lock
     if(user == '接待喵'):  #防止自循环
         return
     if(s.find('mvid+') == 0):
@@ -236,8 +238,8 @@ def pick_msg(s, user):
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('喵') > -1):
-        replay = ("喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！")
-        send_dm(random.randint(0, len(replay)))  #用于测试是否崩掉
+        replay = ["喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！"]
+        send_dm(replay[random.randint(0, len(replay))])  #用于测试是否崩掉
     elif (s == '切歌'):
         if(encode_lock):
             send_dm('有渲染任务，无法切歌')
@@ -254,6 +256,7 @@ def pick_msg(s, user):
         files = os.listdir(path+'/downloads')
         files.sort()
         songs_count = 0
+        all_the_text = ""
         for f in files:
             if((f.find('.mp3') != -1) and (f.find('.download') == -1)):
                 try:
@@ -264,7 +267,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-            if((f.find('.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):
+            if((f.find('ok.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):
                 try:
                     info_file = open(path+'/downloads/'+f.replace(".flv",'')+'.info', 'r')
                     all_the_text = info_file.read()
