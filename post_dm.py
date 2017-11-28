@@ -11,6 +11,7 @@ import time
 import ass_maker
 import var_set
 import _thread
+import random
 
 path = var_set.path
 roomid = var_set.roomid
@@ -69,16 +70,16 @@ def get_download_url(s, t, user, song = "nothing"):
             else:
                 ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
                 ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
-            send_dm_long(t+str(s)+'下载完成，等待渲染')
+            send_dm_long(t+str(s)+'下载完成，等待渲染，请耐心等待')
             while (encode_lock):
                 time.sleep(1)
             encode_lock = True
-            send_dm_long(t+str(s)+'正在渲染')
+            send_dm_long(t+str(s)+'正在渲染，请耐心等待')
             os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+            encode_lock = False
             del_file(filename+'.mp4')
             os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
             send_dm_long(t+str(s)+'渲染完毕，已加入播放队列')
-            encode_lock = False
         try:
             log_file = open(path+'/songs.log', 'a')
             log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
@@ -108,19 +109,18 @@ def download_bilibili(video_url,user):
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
-        send_dm_long('番剧'+video_title+'下载完成，正在渲染')
-        send_dm_long('番剧'+video_title+'下载完成，等待渲染')
+        send_dm_long('番剧'+video_title+'下载完成，等待渲染，请耐心等待')
         while (encode_lock):
             time.sleep(1)
         encode_lock = True
-        send_dm_long('番剧'+video_title+'正在渲染')
+        send_dm_long('番剧'+video_title+'正在渲染，请耐心等待')
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
         send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
-    encode_lock = False
         
 def download_av(video_url,user):
     global encode_lock
@@ -136,18 +136,18 @@ def download_av(video_url,user):
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
         ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
-        send_dm_long('视频'+video_title+'下载完成，等待渲染')
+        send_dm_long('视频'+video_title+'下载完成，等待渲染，请耐心等待')
         while (encode_lock):
             time.sleep(1)
         encode_lock = True
-        send_dm_long('视频'+video_title+'正在渲染')
+        send_dm_long('视频'+video_title+'正在渲染，请耐心等待')
         os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
         send_dm('出错了：可能下载时炸了')
-    encode_lock = False
 
 def search_song(s,user):
     print('[log]searching song:'+s)
@@ -235,7 +235,8 @@ def pick_msg(s, user):
             print('[log]song not found')
             send_dm('出错了：没这首歌')
     elif (s.find('喵') > -1):
-        send_dm('喵？？')  #用于测试是否崩掉
+        replay = ("喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！")
+        send_dm(random.randint(0, len(replay)))  #用于测试是否崩掉
     elif (s == '切歌'):
         jump_to_next_counter += 1
         if(jump_to_next_counter < 5):
@@ -405,4 +406,3 @@ while True:
         print('shit')
         print(e)
         dm_lock = False
-        encode_lock = False
