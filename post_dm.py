@@ -75,7 +75,7 @@ def get_download_url(s, t, user, song = "nothing"):
                 time.sleep(1)
             encode_lock = True
             send_dm_long(t+str(s)+'正在渲染，请耐心等待')
-            os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+            os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'.mp4" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             encode_lock = False
             del_file(filename+'.mp4')
             os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
@@ -114,7 +114,7 @@ def download_bilibili(video_url,user):
             time.sleep(1)
         encode_lock = True
         send_dm_long('番剧'+video_title+'正在渲染，请耐心等待')
-        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
@@ -131,6 +131,7 @@ def download_av(video_url,user):
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
         video_title = video_info['title']
+        send_dm_long('正在下载'+video_title)
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
@@ -141,7 +142,7 @@ def download_av(video_url,user):
             time.sleep(1)
         encode_lock = True
         send_dm_long('视频'+video_title+'正在渲染，请耐心等待')
-        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        os.system('ffmpeg -re -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'.ass'+'" -c:v libx264 -preset ultrafast -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'.flv')
@@ -238,6 +239,9 @@ def pick_msg(s, user):
         replay = ("喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！")
         send_dm(random.randint(0, len(replay)))  #用于测试是否崩掉
     elif (s == '切歌'):
+        if(encode_lock):
+            send_dm('有渲染任务，无法切歌')
+            return
         jump_to_next_counter += 1
         if(jump_to_next_counter < 5):
             send_dm('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
