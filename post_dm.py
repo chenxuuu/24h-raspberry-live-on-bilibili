@@ -65,11 +65,11 @@ def get_download_url(s, t, user, song = "nothing"):
         elif(t == 'mv'):
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4')
             if(song == "nothing"):
-                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path)
-                ass_maker.make_info(filename,'MVid：'+str(s)+",点播人："+user,path)
+                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\N点播人："+user,path+'ok')
+                ass_maker.make_info(filename,'MVid：'+str(s)+",点播人："+user,path+'ok')
             else:
-                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)
-                ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path)
+                ass_maker.make_ass(filename,'当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path+'ok')
+                ass_maker.make_info(filename,'MVid：'+str(s)+",MV："+song+",点播人："+user,path+'ok')
             send_dm_long(t+str(s)+'下载完成，等待渲染，请耐心等待')
             while (encode_lock):
                 time.sleep(1)
@@ -107,8 +107,8 @@ def download_bilibili(video_url,user):
         send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
-        ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path)
-        ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path)
+        ass_maker.make_ass(filename,'番剧：'+video_title+"\\N点播人："+user,path+'ok')
+        ass_maker.make_info(filename,'番剧：'+video_title+",点播人："+user,path+'ok')
         send_dm_long('番剧'+video_title+'下载完成，等待渲染，请耐心等待')
         while (encode_lock):
             time.sleep(1)
@@ -136,8 +136,8 @@ def download_av(video_url,user):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         print('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
-        ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
-        ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path)
+        ass_maker.make_ass(filename,'视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path+'ok')
+        ass_maker.make_info(filename,'视频：'+video_title+",点播人："+user,path+'ok')
         send_dm_long('视频'+video_title+'下载完成，等待渲染，请耐心等待')
         while (encode_lock):
             time.sleep(1)

@@ -65,6 +65,9 @@ while True:
                 print('mp3 long:'+convert_time(seconds))
                 print('ffmpeg -re -loop 1 -r 3 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate 1000k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -loop 1 -r 3 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate 1000k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+            if(mp3_files[mp3_ran].find('.flv') != -1):
+                print('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                os.system('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
     except:
         print('shit')
 
