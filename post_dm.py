@@ -287,9 +287,18 @@ def pick_msg(s, user):
         songs_count = 0
         all_the_text = ""
         for f in files:
-            if(f.find('rendering.flv') != -1):
+            if(f.find('rendering1.flv') != -1):
                 try:
-                    info_file = open(path+'/downloads/'+f.replace("rendering.flv",'')+'ok.info', 'r')
+                    info_file = open(path+'/downloads/'+f.replace("rendering1.flv",'')+'ok.info', 'r')
+                    all_the_text = info_file.read()
+                    info_file.close()
+                except Exception as e:
+                    print(e)
+                send_dm_long(all_the_text)
+                songs_count += 1
+            if(f.find('.mp4') != -1):
+                try:
+                    info_file = open(path+'/downloads/'+f.replace(".mp4",'')+'ok.info', 'r')
                     all_the_text = info_file.read()
                     info_file.close()
                 except Exception as e:
