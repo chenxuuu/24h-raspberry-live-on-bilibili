@@ -58,8 +58,8 @@ while True:
                 print('flv:'+f)
                 print('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
-                os.rename(path+'/downloads/'+filename,path+'/downloads/'+filename.replace("ok",""))
-                _thread.start_new_thread(remove_v, (filename.replace("ok","")))
+                os.rename(path+'/downloads/'+f,path+'/downloads/'+f.replace("ok",""))
+                _thread.start_new_thread(remove_v, (f.replace("ok",""),))
                 count+=1
         if(count == 0):
             print('no media')
@@ -79,7 +79,7 @@ while True:
             if(mp3_files[mp3_ran].find('.flv') != -1):
                 print('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
-    except:
-        print('shit')
+    except Exception as e:
+        print(e)
 
         
