@@ -5,6 +5,9 @@ import time
 import random
 from mutagen.mp3 import MP3
 import var_set
+import shutil
+import _thread
+
 path = var_set.path
 rtmp = var_set.rtmp
 live_code = var_set.live_code
@@ -13,6 +16,18 @@ def convert_time(n):
     s = n%60
     m = int(n/60)
     return '00:'+"%02d"%m+':'+"%02d"%s
+
+def remove_v(filename):
+    try:
+        shutil.move(path+'/downloads/'+filename,path+'/default_mp3/')
+    except Exception as e:
+        print(e)
+    try:
+        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'.ass')
+        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'.info')
+    except Exception as e:
+        print(e)
+        print('delete error')
 
 while True:
     try:
@@ -43,12 +58,8 @@ while True:
                 print('flv:'+f)
                 print('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
-                try:
-                    os.remove(path+'/downloads/'+f)
-                    os.remove(path+'/downloads/'+f.replace(".flv",'')+'.ass')
-                    os.remove(path+'/downloads/'+f.replace(".flv",'')+'.info')
-                except:
-                    print('delete error')
+                os.rename(path+'/downloads/'+filename,path+'/downloads/'+filename.replace("ok",""))
+                _thread.start_new_thread(remove_v, (filename.replace("ok","")))
                 count+=1
         if(count == 0):
             print('no media')

@@ -26,6 +26,9 @@ def check_free():
     size = 0
     for f in files:
         size += os.path.getsize(path+'/downloads/'+f)
+    files = os.listdir(path+'/default_mp3')
+    for f in files:
+        size += os.path.getsize(path+'/default_mp3/'+f)
     if(size > var_set.free_space*1024*1024):
         return True
     else:
@@ -40,7 +43,7 @@ def del_file(f):
 def get_download_url(s, t, user, song = "nothing"):
     global encode_lock
     if(check_free()):
-        send_dm_long('已下载空间占用超过阈值')
+        send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
@@ -97,7 +100,7 @@ def get_download_url(s, t, user, song = "nothing"):
 def download_bilibili(video_url,user):
     global encode_lock
     if(check_free()):
-        send_dm_long('已下载空间占用超过阈值')
+        send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     try:
         print('[log]downloading bilibili video:'+str(video_url))
@@ -125,7 +128,7 @@ def download_bilibili(video_url,user):
 def download_av(video_url,user):
     global encode_lock
     if(check_free()):
-        send_dm_long('已下载空间占用超过阈值')
+        send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     try:
         print('[log]downloading bilibili video:'+str(video_url))
@@ -277,6 +280,23 @@ def pick_msg(s, user):
                 send_dm_long(all_the_text)
                 songs_count += 1
         send_dm('点播列表展示完毕，一共'+str(songs_count)+'首')
+    elif (s == '渲染列表'):
+        send_dm_long('已收到'+user+'的指令，正在查询')
+        files = os.listdir(path+'/downloads')
+        files.sort()
+        songs_count = 0
+        all_the_text = ""
+        for f in files:
+            if(f.find('rendering.flv') != -1):
+                try:
+                    info_file = open(path+'/downloads/'+f.replace("rendering.flv",'')+'ok.info', 'r')
+                    all_the_text = info_file.read()
+                    info_file.close()
+                except Exception as e:
+                    print(e)
+                send_dm_long(all_the_text)
+                songs_count += 1
+        send_dm('渲染列表展示完毕，一共'+str(songs_count)+'首')
     elif (s.find('番剧') == 0):
         try:
             send_dm('已收到'+user+'的指令')
