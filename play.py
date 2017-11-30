@@ -23,8 +23,8 @@ def remove_v(filename):
     except Exception as e:
         print(e)
     try:
-        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'.ass')
-        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'.info')
+        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'ok.ass')
+        os.remove(path+'/downloads/'+filename.replace(".flv",'')+'ok.info')
     except Exception as e:
         print(e)
         print('delete error')

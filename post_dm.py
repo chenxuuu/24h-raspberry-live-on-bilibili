@@ -30,9 +30,27 @@ def check_free():
     for f in files:
         size += os.path.getsize(path+'/default_mp3/'+f)
     if(size > var_set.free_space*1024*1024):
+        print("space size:"+str(size))
         return True
     else:
         return False
+
+def clean_files():
+    is_boom = True
+    if(check_free()):
+        files = os.listdir(path+'/default_mp3')
+        files.sort()
+        for f in files:
+            if((f.find('.flv') != -1) & (check_free())):
+                try:
+                    os.remove(path+'/default_mp3/'+f)
+                except Exception as e:
+                    print(e)
+            elif(check_free() == False):
+                is_boom = False
+    else:
+        is_boom = False
+    return is_boom
 
 def del_file(f):
     try:
@@ -42,7 +60,7 @@ def del_file(f):
 
 def get_download_url(s, t, user, song = "nothing"):
     global encode_lock
-    if(check_free()):
+    if(clean_files()):
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     send_dm_long('正在下载'+t+str(s))
@@ -99,7 +117,7 @@ def get_download_url(s, t, user, song = "nothing"):
 
 def download_bilibili(video_url,user):
     global encode_lock
-    if(check_free()):
+    if(clean_files()):
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     try:
@@ -127,7 +145,7 @@ def download_bilibili(video_url,user):
         
 def download_av(video_url,user):
     global encode_lock
-    if(check_free()):
+    if(clean_files()):
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     try:
