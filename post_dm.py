@@ -43,7 +43,7 @@ def clean_files():
         files = os.listdir(path+'/default_mp3') #获取下载文件夹下所有文件
         files.sort()    #排序文件，以便按日期删除多余文件
         for f in files:
-            if((f.find('.flv') != -1) & (check_free())):    #检查可用空间是否依旧超过设置大小
+            if(check_free()):    #检查可用空间是否依旧超过设置大小
                 try:
                     os.remove(path+'/default_mp3/'+f)   #删除文件
                 except Exception as e:
