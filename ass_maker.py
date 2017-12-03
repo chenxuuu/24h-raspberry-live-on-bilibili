@@ -77,9 +77,12 @@ def lrc_to_ass(lrc):
     list3.append('00')
     list4.append(' ')
     list4.append(' ')
-    for i in range(2, len(list1)-3):
+    for i in range(2, len(list1)-4):
         text=list4[i-2]+'\\N'+list4[i-1]+'\\N'+list4[i]+'\\N'+list4[i+1]+'\\N'+list4[i+2]
         result+='Dialogue: 2,0:'+list1[i]+':'+list2[i]+'.'+list3[i][0:2]+',0:'+list1[i+1]+':'+list2[i+1]+'.'+list3[i+1][0:2]+',center_down_big,,0,0,0,,'+text+'\r\n'
+    #修正最后一句歌词消失的bug
+    text=list4[len(list1)-5]+'\\N'+list4[len(list1)-4]+'\\N'+list4[len(list1)-3]+'\\N'+list4[len(list1)-2]+'\\N'+list4[len(list1)-1]
+    result+='Dialogue: 2,0:'+list1[len(list1)-3]+':'+list2[len(list1)-3]+'.'+list3[len(list1)-3][0:2]+',0:10:00.00,center_down_big,,0,0,0,,'+text+'\r\n'
     return result
 
 
