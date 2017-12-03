@@ -1,8 +1,14 @@
 #coding:utf-8
 import os
 import time
+
+#生成字幕文件，传入参数：
+#filename：文件名
+#info：文件信息，用于左下角显示用的
+#path：文件路径
+#ass：最原始的歌词数据
 def make_ass(filename, info, path, ass = ''):
-    ass = ass.replace('[','Dialogue: 2,0:',40)
+    ass = ass.replace('[','Dialogue: 2,0:',40)      #通过最笨的办法来实现歌词显示
     ass = ass.replace(']',',07:00:00.00,left_up,,0,0,0,,',40)
     ass = ass.replace('[','Dialogue: 2,0:',50)
     ass = ass.replace(']',',07:00:00.00,center_up,,0,0,0,,')
@@ -36,11 +42,11 @@ Dialogue: 2,0:00:00.00,07:00:00.00,left_up,,0,0,0,,晨旭的树莓派点播台~�
 Dialogue: 2,0:00:00.00,07:00:00.00,right_up,,0,0,0,,弹幕点播方法请看直播间简介哦~
 Dialogue: 2,0:00:00.00,07:00:00.00,right_up,,0,0,0,,测试点播台，功能不断完善中
 '''+ass
-    file = open(path+'/downloads/'+str(filename)+'.ass','w')
+    file = open(path+'/downloads/'+str(filename)+'.ass','w')    #保存ass字幕文件
     file.write(file_content)
     file.close()
 
-    
+#生成info文件
 def make_info(filename, info, path):
     file_content = info
     file = open(path+'/downloads/'+str(filename)+'.info','w')
