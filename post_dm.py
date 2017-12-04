@@ -90,11 +90,16 @@ def get_download_url(s, t, user, song = "nothing"):
             lyric_get = urllib.parse.urlencode({'lyric': s})    #格式化参数
             lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get)  #设定获取歌词的网址
             lyric = lyric_w.read().decode('utf-8')  #获取歌词文件
+
+            tlyric_get = urllib.parse.urlencode({'tlyric': s})    #格式化参数
+            tlyric_w = urllib.request.urlopen(download_api_url + "?%s" % tlyric_get)  #设定获取歌词的网址
+            tlyric = tlyric_w.read().decode('utf-8')  #获取歌词文件
+
             if(song == "nothing"):  #当直接用id点歌时
-                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path,lyric)  #生成字幕
+                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path,lyric,tlyric)  #生成字幕
                 ass_maker.make_info(filename,'id：'+str(s)+",点播人："+user,path)    #生成介绍信息，用来查询
             else:   #当用关键字搜索点歌时
-                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric)   #生成字幕
+                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric,tlyric)   #生成字幕
                 ass_maker.make_info(filename,'id：'+str(s)+",关键词："+song+",点播人："+user,path)    #生成介绍信息，用来查询
             send_dm_long(t+str(s)+'下载完成，已加入播放队列')
             print('[log]已添加排队项目：'+t+str(s))
