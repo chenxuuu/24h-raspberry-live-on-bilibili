@@ -354,6 +354,8 @@ def pick_msg(s, user):
                 songs_count += 1
         send_dm('渲染列表展示完毕，一共'+str(songs_count)+'个')
     elif (s.find('番剧') == 0):
+        send_dm_long('您的直播间因“禁止盗播新番”，已被管x员“切断”，请更改直播内容。')
+        return
         try:
             send_dm('已收到'+user+'的指令')
             #番剧网址格式：https://bangumi.bilibili.com/anime/123/play#456
