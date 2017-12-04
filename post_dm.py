@@ -224,18 +224,19 @@ def search_mv(s,user):
 
 #切歌请求次数统计
 jump_to_next_counter = 0
-dm_lock = False
+rp_lock = False
 def pick_msg(s, user):
     global jump_to_next_counter #切歌请求次数统计
     global encode_lock  #视频渲染任务锁
-    if (user=='晨旭' | user=='摘希喵喵喵'):    #debug使用，请自己修改
+    global rp_lock
+    if ((user=='晨旭') | (user=='摘希喵喵喵')):    #debug使用，请自己修改
         if(s=='锁定'):
-            dm_lock = True
+            rp_lock = True
             send_dm('已锁定点播功能，不响应任何弹幕')
         if(s=='解锁'):
-            dm_lock = False
+            rp_lock = False
             send_dm('已解锁点播功能，开始响应弹幕请求')
-    if(user == '接待喵' | dm_lock):  #防止自循环
+    if((user == '接待喵') | rp_lock):  #防止自循环
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
@@ -293,7 +294,7 @@ def pick_msg(s, user):
             send_dm('有渲染任务，无法切歌')
             return
         jump_to_next_counter += 1   #切歌次数统计加一
-        if(user=='晨旭' | user=='摘希喵喵喵'): #debug使用，请自己修改
+        if((user=='晨旭') | (user=='摘希喵喵喵')): #debug使用，请自己修改
             jump_to_next_counter=5
         if(jump_to_next_counter < 5):   #次数未达到五次
             send_dm('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
