@@ -32,7 +32,7 @@ Style: left_up,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0
 Style: right_up,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,9,10,10,5,1
 Style: center_up,微软雅黑,15,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,8,10,10,5,1
 Style: center_down,微软雅黑,20,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,2,10,10,5,1
-Style: center_down_big,微软雅黑,25,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,2,10,10,5,1
+Style: center_down_big,微软雅黑,28,&H00FFFFFF,&H00FFFFFF,&H28533B3B,&H500E0A00,0,0,0,0,100.0,100.0,0.0,0.0,1,3.5546875,3.0,2,10,10,5,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -78,11 +78,19 @@ def lrc_to_ass(lrc):
     list4.append(' ')
     list4.append(' ')
     for i in range(2, len(list1)-4):
-        text=list4[i-2]+'\\N'+list4[i-1]+'\\N'+list4[i]+'\\N'+list4[i+1]+'\\N'+list4[i+2]
+        text='　'+list4[i+1]+'　\\N　'+list4[i+2]+'　'
+        result+='Dialogue: 2,0:'+list1[i]+':'+list2[i]+'.'+list3[i][0:2]+',0:'+list1[i+1]+':'+list2[i+1]+'.'+list3[i+1][0:2]+',center_down,,0,0,0,,'+text+'\r\n'
+        text='　'+list4[i]+'　'
         result+='Dialogue: 2,0:'+list1[i]+':'+list2[i]+'.'+list3[i][0:2]+',0:'+list1[i+1]+':'+list2[i+1]+'.'+list3[i+1][0:2]+',center_down_big,,0,0,0,,'+text+'\r\n'
+        text='　'+list4[i-2]+'　\\N　'+list4[i-1]+'　'
+        result+='Dialogue: 2,0:'+list1[i]+':'+list2[i]+'.'+list3[i][0:2]+',0:'+list1[i+1]+':'+list2[i+1]+'.'+list3[i+1][0:2]+',center_down,,0,0,0,,'+text+'\r\n'
     #修正最后一句歌词消失的bug
-    text=list4[len(list1)-5]+'\\N'+list4[len(list1)-4]+'\\N'+list4[len(list1)-3]+'\\N'+list4[len(list1)-2]+'\\N'+list4[len(list1)-1]
+    text='　'+list4[len(list1)-2]+'　\\N　'+list4[len(list1)-1]+'　'
+    result+='Dialogue: 2,0:'+list1[len(list1)-3]+':'+list2[len(list1)-3]+'.'+list3[len(list1)-3][0:2]+',0:10:00.00,center_down,,0,0,0,,'+text+'\r\n'
+    text='　'+list4[len(list1)-3]+'　'
     result+='Dialogue: 2,0:'+list1[len(list1)-3]+':'+list2[len(list1)-3]+'.'+list3[len(list1)-3][0:2]+',0:10:00.00,center_down_big,,0,0,0,,'+text+'\r\n'
+    text='　'+list4[len(list1)-5]+'　\\N　'+list4[len(list1)-4]+'　'
+    result+='Dialogue: 2,0:'+list1[len(list1)-3]+':'+list2[len(list1)-3]+'.'+list3[len(list1)-3][0:2]+',0:10:00.00,center_down,,0,0,0,,'+text+'\r\n'
     return result
 
 
