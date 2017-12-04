@@ -43,9 +43,16 @@ def clean_files():
         files = os.listdir(path+'/default_mp3') #获取下载文件夹下所有文件
         files.sort()    #排序文件，以便按日期删除多余文件
         for f in files:
-            if(check_free()):    #检查可用空间是否依旧超过设置大小
+            if((f.find('.flv') != -1) & (check_free())):    #检查可用空间是否依旧超过设置大小，flv文件
                 try:
                     os.remove(path+'/default_mp3/'+f)   #删除文件
+                except Exception as e:
+                    print(e)
+            elif((f.find('.mp3') != -1) & (check_free())):    #检查可用空间是否依旧超过设置大小，mp3文件
+                try:
+                    os.remove(path+'/default_mp3/'+f)   #删除文件
+                    os.remove(path+'/default_mp3/'+f.replace(".mp3",'')+'.ass')
+                    os.remove(path+'/default_mp3/'+f.replace(".mp3",'')+'.info')
                 except Exception as e:
                     print(e)
             elif(check_free() == False):    #符合空间大小占用设置时，停止删除操作
@@ -88,7 +95,7 @@ def get_download_url(s, t, user, song = "nothing"):
                 ass_maker.make_info(filename,'id：'+str(s)+",点播人："+user,path)    #生成介绍信息，用来查询
             else:   #当用关键字搜索点歌时
                 ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric)   #生成字幕
-                ass_maker.make_info(filename,'id：'+str(s)+",点的："+song+",点播人："+user,path)    #生成介绍信息，用来查询
+                ass_maker.make_info(filename,'id：'+str(s)+",关键词："+song+",点播人："+user,path)    #生成介绍信息，用来查询
             send_dm_long(t+str(s)+'下载完成，已加入播放队列')
             print('[log]已添加排队项目：'+t+str(s))
         elif(t == 'mv'):    #当参数为mv时
@@ -98,12 +105,12 @@ def get_download_url(s, t, user, song = "nothing"):
                 ass_maker.make_info(filename+'ok','MVid：'+str(s)+",点播人："+user,path)#生成介绍信息，用来查询
             else:   #当用关键字搜索点mv时
                 ass_maker.make_ass(filename+'ok','当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)#生成字幕
-                ass_maker.make_info(filename+'ok','MVid：'+str(s)+",MV："+song+",点播人："+user,path)#生成介绍信息，用来查询
-            send_dm_long(t+str(s)+'下载完成，等待渲染，请耐心等待')
+                ass_maker.make_info(filename+'ok','MVid：'+str(s)+",关键词："+song+",点播人："+user,path)#生成介绍信息，用来查询
+            send_dm_long(t+str(s)+'下载完成，等待渲染')
             while (encode_lock):    #渲染锁，如果现在有渲染任务，则无限循环等待
                 time.sleep(1)   #等待
             encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
-            send_dm_long(t+str(s)+'正在渲染，请耐心等待')
+            send_dm_long(t+str(s)+'正在渲染')
             os.system('ffmpeg -i "'+path+'/downloads/'+filename+'.mp4" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             encode_lock = False #关闭渲染锁，以便其他任务继续渲染
             del_file(filename+'.mp4')   #删除渲染所用的原文件
@@ -116,7 +123,7 @@ def get_download_url(s, t, user, song = "nothing"):
         except:
             print('[error]log error')
     except: #下载出错
-        send_dm('出错了：下载出错，请换一首或重试')
+        send_dm('出错了：请检查命令或重试')
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
@@ -134,23 +141,23 @@ def download_bilibili(video_url,user):
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())    #获取视频标题，标题错误则说明点播参数不对，跳到except
         video_title = video_info['title']   #获取标题
         send_dm_long('正在下载'+video_title)
-        send_dm('注意，视频下载十分费时，请耐心等待')
+        #send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #用时间戳设定文件名
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1') #下载视频文件
-        ass_maker.make_ass(filename+'ok','番剧：'+video_title+"\\N点播人："+user,path) #生成字幕
+        ass_maker.make_ass(filename+'ok',"点播人："+user+"\\N番剧："+video_title+"\\N"+video_url,path) #生成字幕
         ass_maker.make_info(filename+'ok','番剧：'+video_title+",点播人："+user,path)  #生成介绍信息，用来查询
-        send_dm_long('番剧'+video_title+'下载完成，等待渲染，请耐心等待')
+        send_dm_long('番剧'+video_title+'下载完成，等待渲染')
         while (encode_lock):    #渲染锁，如果现在有渲染任务，则无限循环等待
             time.sleep(1)   #等待
         encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
-        send_dm_long('番剧'+video_title+'正在渲染，请耐心等待')
+        send_dm_long('番剧'+video_title+'正在渲染')
         os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False #关闭渲染锁，以便其他任务继续渲染
         del_file(filename+'rendering1.flv') #删除渲染所用的原文件
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
         send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except: #报错提示，一般只会出现在获取标题失败时出现，就是点播参数不对
-        send_dm('出错了：可能下载时炸了')
+        send_dm('出错了：请检查命令或重试')
         
 #下载b站任意视频，传入值：网址、点播人用户名
 #此部分逻辑与“下载b站番剧视频”部分完全相同，不另行作注释解释
@@ -164,24 +171,24 @@ def download_av(video_url,user):
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
         video_title = video_info['title']
         send_dm_long('正在下载'+video_title)
-        send_dm('注意，视频下载十分费时，请耐心等待')
+        #send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         print('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
-        ass_maker.make_ass(filename+'ok','视频：'+video_title+"\\N"+video_url+"\\N点播人："+user,path)
+        ass_maker.make_ass(filename+'ok','点播人：'+user+"\\N视频："+video_title+"\\N"+video_url,path)
         ass_maker.make_info(filename+'ok','视频：'+video_title+",点播人："+user,path)
-        send_dm_long('视频'+video_title+'下载完成，等待渲染，请耐心等待')
+        send_dm_long('视频'+video_title+'下载完成，等待渲染')
         while (encode_lock):
             time.sleep(1)
         encode_lock = True
-        send_dm_long('视频'+video_title+'正在渲染，请耐心等待')
+        send_dm_long('视频'+video_title+'正在渲染')
         os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
-        send_dm('出错了：可能下载时炸了')
+        send_dm('出错了：请检查命令或重试')
 
 #搜索歌曲并下载
 def search_song(s,user):
@@ -217,11 +224,18 @@ def search_mv(s,user):
 
 #切歌请求次数统计
 jump_to_next_counter = 0
-
+dm_lock = False
 def pick_msg(s, user):
     global jump_to_next_counter #切歌请求次数统计
     global encode_lock  #视频渲染任务锁
-    if(user == '接待喵'):  #防止自循环
+    if (user=='晨旭' | user=='摘希喵喵喵'):    #debug使用，请自己修改
+        if(s=='锁定'):
+            dm_lock = True
+            send_dm('已锁定点播功能，不响应任何弹幕')
+        if(s=='解锁'):
+            dm_lock = False
+            send_dm('已解锁点播功能，开始响应弹幕请求')
+    if(user == '接待喵' | dm_lock):  #防止自循环
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
@@ -279,6 +293,8 @@ def pick_msg(s, user):
             send_dm('有渲染任务，无法切歌')
             return
         jump_to_next_counter += 1   #切歌次数统计加一
+        if(user=='晨旭' | user=='摘希喵喵喵'): #debug使用，请自己修改
+            jump_to_next_counter=5
         if(jump_to_next_counter < 5):   #次数未达到五次
             send_dm('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
         else:   #次数未达到五次
@@ -310,7 +326,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm('点播列表展示完毕，一共'+str(songs_count)+'首')
+        send_dm('点播列表展示完毕，一共'+str(songs_count)+'个')
     elif (s == '渲染列表'):
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')   #获取目录下所有文件
@@ -336,7 +352,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm('渲染列表展示完毕，一共'+str(songs_count)+'首')
+        send_dm('渲染列表展示完毕，一共'+str(songs_count)+'个')
     elif (s.find('番剧') == 0):
         try:
             send_dm('已收到'+user+'的指令')
