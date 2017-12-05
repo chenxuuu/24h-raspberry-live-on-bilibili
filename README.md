@@ -97,10 +97,10 @@ sudo apt-get install screen
 
 安装中文字体
 ```Bash
-apt install fontconfig
-apt-get install ttf-mscorefonts-installer
-apt-get install -y --force-yes --no-install-recommends fonts-wqy-microhei
-apt-get install -y --force-yes --no-install-recommends ttf-wqy-zenhei
+sudo apt install fontconfig
+sudo apt-get install ttf-mscorefonts-installer
+sudo apt-get install -y --force-yes --no-install-recommends fonts-wqy-microhei
+sudo apt-get install -y --force-yes --no-install-recommends ttf-wqy-zenhei
 #可能有装不上的，应该问题不大
 
 # 查看中文字体 --确认字体是否安装成功
