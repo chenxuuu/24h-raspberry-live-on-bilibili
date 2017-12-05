@@ -147,7 +147,7 @@ def playlist_download(id,user):
     except Exception as e:  #防炸
         print('shit')
         print(e)
-        print('出错了：请检查命令或重试')
+        send_dm_long('出错了：请检查命令或重试')
     for song in playlist['playlist']['tracks']:
         print('name:'+song['name']+'id:'+str(song['id']))
         get_download_url(song['id'], 'id', user, song['name'])
