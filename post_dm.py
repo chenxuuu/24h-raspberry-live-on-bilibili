@@ -135,6 +135,23 @@ def get_download_url(s, t, user, song = "nothing"):
         del_file(filename+'.flv')
     return url
 
+#下载歌单
+def playlist_download(id,user):
+    params = urllib.parse.urlencode({'playlist': str(id)}) #格式化参数
+    f = urllib.request.urlopen(download_api_url + "?%s" % params)   #设定获取的网址
+    try:
+        playlist = json.loads(f.read().decode('utf-8'))  #获取结果，并反序化
+        send_dm_long('正在下载歌单：'+playlist['playlist']['name']+'，共'+str(len(playlist['playlist']['tracks']))+'首')
+    except Exception as e:  #防炸
+        print('shit')
+        print(e)
+        print('出错了：请检查命令或重试')
+    for song in playlist['playlist']['tracks']:
+        print('name:'+song['name']+'id:'+str(song['id']))
+        get_download_url(song['id'], 'id', user, song['name'])
+
+    
+
 #下载b站番剧视频，传入值：网址、点播人用户名
 def download_bilibili(video_url,user):
     global encode_lock  #视频渲染锁，用来排队
@@ -387,6 +404,9 @@ def pick_msg(s, user):
             print('[log]video not found')
     elif (s.find('温度') > -1):
         send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
+    elif (s.find('歌单') == 0):
+        send_dm('已收到'+user+'的指令')
+        _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))
     # else:
     #     print('not match anything')
 
