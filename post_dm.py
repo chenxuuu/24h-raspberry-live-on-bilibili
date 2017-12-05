@@ -21,7 +21,7 @@ download_api_url = var_set.download_api_url #引入设置的音乐下载链接�
 dm_lock = False         #弹幕发送锁，用来排队
 encode_lock = False     #视频渲染锁，用来排队
 
-sensitive_word = ('64') #容易误伤的和谐词汇表，待补充
+sensitive_word = ('64', '89') #容易误伤的和谐词汇表，待补充
 
 #检查已使用空间是否超过设置大小
 def check_free():
@@ -130,7 +130,7 @@ def get_download_url(s, t, user, song = "nothing"):
         except:
             print('[error]log error')
     except: #下载出错
-        send_dm('出错了：请检查命令或重试')
+        send_dm_long('出错了：请检查命令或重试')
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
@@ -181,7 +181,7 @@ def download_bilibili(video_url,user):
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
         send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
     except: #报错提示，一般只会出现在获取标题失败时出现，就是点播参数不对
-        send_dm('出错了：请检查命令或重试')
+        send_dm_long('出错了：请检查命令或重试')
         
 #下载b站任意视频，传入值：网址、点播人用户名
 #此部分逻辑与“下载b站番剧视频”部分完全相同，不另行作注释解释
@@ -212,7 +212,7 @@ def download_av(video_url,user):
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
-        send_dm('出错了：请检查命令或重试')
+        send_dm_long('出错了：请检查命令或重试')
 
 #搜索歌曲并下载
 def search_song(s,user):
@@ -256,75 +256,75 @@ def pick_msg(s, user):
     if ((user=='晨旭') | (user=='摘希喵喵喵')):    #debug使用，请自己修改
         if(s=='锁定'):
             rp_lock = True
-            send_dm('已锁定点播功能，不响应任何弹幕')
+            send_dm_long('已锁定点播功能，不响应任何弹幕')
         if(s=='解锁'):
             rp_lock = False
-            send_dm('已解锁点播功能，开始响应弹幕请求')
+            send_dm_long('已解锁点播功能，开始响应弹幕请求')
     if((user == '接待喵') | rp_lock):  #防止自循环
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
-        send_dm('已收到'+user+'的指令')
+        send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             search_mv(s.replace('mv+', '', 1),user)
         except:
             print('[log]mv not found')
-            send_dm('出错了：没这mv')
+            send_dm_long('出错了：没这mv')
     elif (s.find('song+') == 0):
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('song+', '', 1),user)
         except:
             print('[log]song not found')
-            send_dm('出错了：没这首歌')
+            send_dm_long('出错了：没这首歌')
     elif (s.find('id+') == 0):
-        send_dm('已收到'+user+'的指令')
+        send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
-        send_dm('已收到'+user+'的指令')
+        send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             search_mv(s.replace('mv', '', 1),user)
         except:
             print('[log]mv not found')
-            send_dm('出错了：没这mv')
+            send_dm_long('出错了：没这mv')
     elif (s.find('song') == 0):
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('song', '', 1),user)
         except:
             print('[log]song not found')
-            send_dm('出错了：没这首歌')
+            send_dm_long('出错了：没这首歌')
     elif (s.find('id') == 0):
-        send_dm('已收到'+user+'的指令')
+        send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(get_download_url, (s.replace('id', '', 1), 'id',user))
     elif (s.find('点歌') == 0):
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('点歌', '', 1),user)
         except:
             print('[log]song not found')
-            send_dm('出错了：没这首歌')
+            send_dm_long('出错了：没这首歌')
     elif (s.find('喵') > -1):
         replay = ["喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！"]
-        send_dm(replay[random.randint(0, len(replay))])  #用于测试是否崩掉
+        send_dm_long(replay[random.randint(0, len(replay))])  #用于测试是否崩掉
     elif (s == '切歌'):   #切歌请求
         if(encode_lock):    #切歌原理为killall ffmpeg，但是如果有渲染任务，kill后也会结束渲染进程，会出错
-            send_dm('有渲染任务，无法切歌')
+            send_dm_long('有渲染任务，无法切歌')
             return
         jump_to_next_counter += 1   #切歌次数统计加一
         if((user=='晨旭') | (user=='摘希喵喵喵')): #debug使用，请自己修改
             jump_to_next_counter=5
         if(jump_to_next_counter < 5):   #次数未达到五次
-            send_dm('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
+            send_dm_long('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
         else:   #次数未达到五次
             jump_to_next_counter = 0    #次数统计清零
-            send_dm('已执行切歌动作')
+            send_dm_long('已执行切歌动作')
             os.system('killall ffmpeg') #强行结束ffmpeg进程
     elif ((s == '点播列表') or (s == '歌曲列表')):
         send_dm_long('已收到'+user+'的指令，正在查询')
@@ -351,7 +351,7 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm('点播列表展示完毕，一共'+str(songs_count)+'个')
+        send_dm_long('点播列表展示完毕，一共'+str(songs_count)+'个')
     elif (s == '渲染列表'):
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')   #获取目录下所有文件
@@ -377,12 +377,12 @@ def pick_msg(s, user):
                     print(e)
                 send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm('渲染列表展示完毕，一共'+str(songs_count)+'个')
+        send_dm_long('渲染列表展示完毕，一共'+str(songs_count)+'个')
     elif (s.find('番剧') == 0):
         send_dm_long('您的直播间因“禁止盗播新番”，已被管x员“切断”，请更改直播内容。')
         return
         try:
-            send_dm('已收到'+user+'的指令')
+            send_dm_long('已收到'+user+'的指令')
             #番剧网址格式：https://bangumi.bilibili.com/anime/123/play#456
             ture_url=s.replace('.','/play#')
             ture_url=ture_url.replace('番剧','https://bangumi.bilibili.com/anime/')
@@ -392,12 +392,12 @@ def pick_msg(s, user):
     elif (s.find('av') == 0):
         try:
             if(s.find('p') == -1):
-                send_dm('已收到'+user+'的指令')
+                send_dm_long('已收到'+user+'的指令')
                 #视频网址格式：https://www.bilibili.com/video/avxxxxx
                 ture_url=s.replace('av','https://www.bilibili.com/video/av')
                 _thread.start_new_thread(download_av, (ture_url,user))
             else:
-                send_dm('已收到'+user+'的指令')
+                send_dm_long('已收到'+user+'的指令')
                 #视频网址格式：https://www.bilibili.com/video/avxxxx/#page=x
                 ture_url=s.replace('p','/#page=')
                 ture_url=ture_url.replace('av','https://www.bilibili.com/video/av')
@@ -407,7 +407,7 @@ def pick_msg(s, user):
     elif (s.find('温度') > -1):
         send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
     elif (s.find('歌单') == 0):
-        send_dm('已收到'+user+'的指令')
+        send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))
     # else:
     #     print('not match anything')
@@ -520,7 +520,7 @@ def test():
     print('ok')
 
 print('程序已启动，连接房间id：'+roomid)
-send_dm('弹幕监控已启动，可以点歌了')
+send_dm_long('弹幕监控已启动，可以点歌了')
 while True: #防炸
     try:
         get_dm_loop()   #开启弹幕获取循环函数
