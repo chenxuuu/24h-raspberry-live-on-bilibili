@@ -57,7 +57,7 @@ if(!empty($_GET['debug']))
     elseif(!empty($_GET['tlyric']))
     {
         $api = new NeteaseMusicAPI();
-        $result = $api->tlyric($_GET['tlyric']);
+        $result = $api->lyric($_GET['tlyric']);
         echo $result;
     }
 }
