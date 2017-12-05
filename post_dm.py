@@ -21,6 +21,8 @@ download_api_url = var_set.download_api_url #引入设置的音乐下载链接�
 dm_lock = False         #弹幕发送锁，用来排队
 encode_lock = False     #视频渲染锁，用来排队
 
+sensitive_word = ('64') #容易误伤的和谐词汇表，待补充
+
 #检查已使用空间是否超过设置大小
 def check_free():
     files = os.listdir(path+'/downloads')  #获取下载文件夹下所有文件
@@ -458,6 +460,9 @@ def send_dm(s):
 #每条弹幕最长只能发送20字符，过长的弹幕分段发送
 def send_dm_long(s):
     n=20
+    for hx in sensitive_word:                  #处理和谐词，防止点播机的回复被和谐
+        if (s.find(hx) > -1):
+            s = s.replace(hx, hx[0]+" "+hx[1:])    #在和谐词第一个字符后加上一个空格
     for i in range(0, len(s), n):
         send_dm(s[i:i+n])
 
@@ -506,7 +511,8 @@ def get_dm_loop():
             if(check_dm(t_get)):
                 print('[log]['+t_get['timeline']+']'+t_get['nickname']+':'+t_get['text'])
                 #send_dm('用户'+t_get['nickname']+'发送了'+t_get['text']) #别开，会死循环
-                pick_msg(t_get['text'],t_get['nickname'])   #新弹幕检测是否匹配为命令
+                text = t_get['text'].replace(' ', '')   #剔除弹幕中的所有空格
+                pick_msg(text,t_get['nickname'])   #新弹幕检测是否匹配为命令
         temp_dm = dm_result
         time.sleep(1)
 
