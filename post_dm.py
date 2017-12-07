@@ -340,7 +340,8 @@ def pick_msg(s, user):
                     info_file.close()
                 except Exception as e:
                     print(e)
-                send_dm_long(all_the_text)
+                if(songs_count < 10):
+                    send_dm_long(all_the_text)
                 songs_count += 1
             if((f.find('ok.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):#如果是有ok标记的flv文件
                 try:
@@ -349,9 +350,13 @@ def pick_msg(s, user):
                     info_file.close()
                 except Exception as e:
                     print(e)
-                send_dm_long(all_the_text)
+                if(songs_count < 10):
+                    send_dm_long(all_the_text)
                 songs_count += 1
-        send_dm_long('点播列表展示完毕，一共'+str(songs_count)+'个')
+        if(songs_count <= 10):
+            send_dm_long('点播列表展示完毕，一共'+str(songs_count)+'个')
+        else:
+            send_dm_long('点播列表前十首展示完毕，一共'+str(songs_count)+'个')
     elif (s == '渲染列表'):
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')   #获取目录下所有文件
