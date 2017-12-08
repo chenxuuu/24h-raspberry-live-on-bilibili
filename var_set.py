@@ -21,7 +21,7 @@ live_code = ''
 
 free_space=15360
 
-#允许视频占用空间大小，超过时禁止下载视频，单位：MiB
+#允许download/default_mp3文件夹占用空间大小，超过时自动按时间顺序删除视频/音乐，单位：MiB
 
 
 maxbitrate='3000'
