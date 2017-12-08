@@ -118,7 +118,7 @@ def get_download_url(s, t, user, song = "nothing"):
                 time.sleep(1)   #等待
             encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
             send_dm_long(t+str(s)+'正在渲染')
-            os.system('ffmpeg -i "'+path+'/downloads/'+filename+'.mp4" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+            os.system('ffmpeg -i "'+path+'/downloads/'+filename+'.mp4" -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -s 1280x720 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             encode_lock = False #关闭渲染锁，以便其他任务继续渲染
             del_file(filename+'.mp4')   #删除渲染所用的原文件
             os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
@@ -175,7 +175,7 @@ def download_bilibili(video_url,user):
             time.sleep(1)   #等待
         encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
         send_dm_long('番剧'+video_title+'正在渲染')
-        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -s 1280x720 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False #关闭渲染锁，以便其他任务继续渲染
         del_file(filename+'rendering1.flv') #删除渲染所用的原文件
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
@@ -206,7 +206,7 @@ def download_av(video_url,user):
             time.sleep(1)
         encode_lock = True
         send_dm_long('视频'+video_title+'正在渲染')
-        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -s 1280x720 -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -vf ass="'+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -s 1280x720 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
         del_file(filename+'rendering1.flv')
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
