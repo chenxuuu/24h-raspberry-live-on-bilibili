@@ -54,6 +54,8 @@ while True:
                     try:    #放完后删除mp3文件、删除字幕、删除点播信息
                         shutil.move(path+'/downloads/'+f,path+'/default_mp3/')
                         shutil.move(path+'/downloads/'+f.replace(".mp3",'')+'.ass',path+'/default_mp3/')
+                    except Exception as e:
+                        print(e)
                 try:
                     os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.info')
                     os.remove(path+'/downloads/'+f)
