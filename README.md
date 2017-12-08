@@ -1,7 +1,10 @@
 # 24h-raspberry-live-on-bilibili
+
 树莓派驱动的b站直播点播台
 
-demo:http://live.bilibili.com/16703
+demo:[http://live.bilibili.com/16703](http://live.bilibili.com/16703)
+
+![](https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/raw/master/demo.jpg)
 
 注意这个是新项目，查看旧版的代码请打开“old”分支查看（旧版为网页点歌版）
 
@@ -56,19 +59,25 @@ rm -rf x264
 ```
 
 libmp3lame：
-```
+
+```Bash
 sudo apt-get install libmp3lame-dev
 ```
+
 libopus:
-```
+
+```Bash
 sudo apt-get install libopus-dev
 ```
+
 libvpx:
-```
+
+```Bash
 sudo apt-get install libvpx-dev
 ```
 
 编译并安装ffmpeg（时间较长，半小时左右）：
+
 ```Bash
 wget http://ffmpeg.org/releases/ffmpeg-3.3.2.tar.bz2
 tar jxvf ffmpeg-3.3.2.tar.bz2
@@ -78,24 +87,29 @@ make -j4
 sudo make install
 cd ..
 ```
+
 （以上有一部分代码参考自[ffmpeg源码编译安装（Compile ffmpeg with source）  Part 2 ： 扩展安装 - 人脑之战 - 博客园](http://www.cnblogs.com/yaoz/p/6944942.html)）
 
 安装python3的mutagen库：
-```
+
+```Bash
 sudo pip3 install mutagen
 ```
 
 安装python3的you-get库：
-```
+
+```Bash
 sudo pip3 install you-get
 ```
 
 安装screen:
-```
+
+```Bash
 sudo apt-get install screen
 ```
 
 安装中文字体
+
 ```Bash
 sudo apt install fontconfig
 sudo apt-get install ttf-mscorefonts-installer
@@ -106,16 +120,21 @@ sudo apt-get install -y --force-yes --no-install-recommends ttf-wqy-zenhei
 # 查看中文字体 --确认字体是否安装成功
 fc-list :lang=zh-cn
 ```
+
 （字体安装来自[ubuntu下 bilibili直播推流 ffmpeg rtmp推送](https://ppx.ink/2.ppx)）
 
 
 ### 烹饪&摆盘：
+
 下载本项目：
-```
+
+```Bash
 git clone https://github.com/chenxuuu/24h-raspberry-live-on-bilibili.git
 ```
+
 或
-```
+
+```Bash
 git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 ```
 
@@ -133,6 +152,7 @@ git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 `default_pic`文件夹内放入jpg格式的音乐，用于做为放音乐时的背景，请尽量保证文件名全英文，分辨率推荐统一处理为1280x720
 
 所有配置完成后，开启直播，然后启动脚本即可：
+
 ```Bash
 screen python3 post_dm.py
 #按ctrl+a,按ctrl+d
