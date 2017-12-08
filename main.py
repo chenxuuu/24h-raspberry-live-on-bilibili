@@ -1,10 +1,17 @@
-from util.FFmpeg import *
-from util.Config import *
-from util.Danmu import *
+from util.Log import Log
+from service.Danmu import DanmuService
 
-path = '/mnt/d/temp/blive/default_mp3/'
+import signal
 
-command = ffmpeg().getMusic(music=path + 'bx.mp3', output='a.flv', image='/home/pi/soft/blive/default_pic/ab.jpg', ass='/home/pi/soft/blive/default.ass')
-command = ffmpeg().getVedio(vedio=path + 'bx.mp3', output='a.flv')
+log = Log('Main')
+danmuService = DanmuService()
 
-danmu = Danmu()
+def exitHandler(signum, frame):
+    log.success('请等待 Service 退出...')
+    danmuService.stop()
+
+if __name__ == '__main__':
+    danmuService.start()
+
+    signal.signal(signal.SIGINT, exitHandler)
+    signal.signal(signal.SIGTERM, exitHandler)
