@@ -1,5 +1,6 @@
 from util.Log import Log
 from service.Danmu import DanmuService
+from downloader.NeteaseMusic import *
 
 import signal
 
@@ -11,7 +12,7 @@ def exitHandler(signum, frame):
     danmuService.stop()
 
 if __name__ == '__main__':
-    danmuService.start()
+    # danmuService.start()
 
     signal.signal(signal.SIGINT, exitHandler)
     signal.signal(signal.SIGTERM, exitHandler)
