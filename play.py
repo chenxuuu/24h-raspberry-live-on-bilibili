@@ -40,9 +40,10 @@ while True:
             if((f.find('.mp3') != -1) and (f.find('.download') == -1)): #如果是mp3文件
                 audio = MP3(path+'/downloads/'+f)   #获取mp3文件信息
                 seconds=audio.info.length   #获取时长
+                bitrate=audio.info.bitrate  #获取码率
                 print('mp3 long:'+convert_time(seconds))
-                if(seconds > 600):  #大于十分钟就不播放
-                    print('too long,delete')
+                if((seconds > 600) | (bitrate > 400000)):  #大于十分钟就不播放/码率限制400k以下
+                    print('too long/too big,delete')
                 else:
                     pic_files = os.listdir(path+'/default_pic') #获取准备的图片文件夹中的所有图片
                     pic_files.sort()    #排序数组
@@ -50,12 +51,15 @@ while True:
                     #推流
                     print('ffmpeg -re -loop 1 -r 3 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                     os.system('ffmpeg -re -loop 1 -r 3 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -crf 24 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
-                try:    #放完后删除mp3文件、删除字幕、删除点播信息
-                    shutil.move(path+'/downloads/'+f,path+'/default_mp3/')
-                    shutil.move(path+'/downloads/'+f.replace(".mp3",'')+'.ass',path+'/default_mp3/')
+                    try:    #放完后删除mp3文件、删除字幕、删除点播信息
+                        shutil.move(path+'/downloads/'+f,path+'/default_mp3/')
+                        shutil.move(path+'/downloads/'+f.replace(".mp3",'')+'.ass',path+'/default_mp3/')
+                    except Exception as e:
+                        print(e)
+                try:
+                    os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.info')
                     os.remove(path+'/downloads/'+f)
                     os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.ass')
-                    os.remove(path+'/downloads/'+f.replace(".mp3",'')+'.info')
                 except:
                     print('delete error')
                 count+=1    #点播统计加一
