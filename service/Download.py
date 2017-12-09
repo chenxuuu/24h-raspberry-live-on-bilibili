@@ -28,30 +28,22 @@ class DownloadService(Service):
             self.log.error(e)
             pass
     
-    def musicDownload(self, item):
+    def musicDownload(self, song):
 
-        # 搜索
-        result = self.musicDownloader.search(item['name'])
+        # 搜索歌曲并下载
+        filename = self.musicDownloader.download(song['id'])
 
-        if result:
-            # 搜索歌曲并下载
-            song = result[0]
-            songId = song['id']
-            filename = self.musicDownloader.download(songId)
+        if filename:
+            self.log.info('歌曲下载完毕 %s - %s' % (song['name'], song['singer']))
 
-            if filename:
-                singer = '未知歌手'
-                if song['artists']:
-                    singer = song['artists'][0]['name']
-                self.log.info('歌曲下载完毕 %s - %s' % (song['name'], singer))
-
-                # 加入播放队列
-                PlayQueue.put({
-                    'type': 'music',
-                    'filename': filename,
-                    'name': song['name'],
-                    'singer': singer
-                })
-            else:
-                pass
+            # 加入播放队列
+            PlayQueue.put({
+                'type': 'music',
+                'filename': filename,
+                'name': song['name'],
+                'singer': song['singer'],
+                'username': song['username']
+            })
+        else:
+            pass
 

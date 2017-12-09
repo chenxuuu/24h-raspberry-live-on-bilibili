@@ -25,16 +25,36 @@ class NeteaseMusic(object):
         return result
 
     # 搜索歌曲
-    def search(self, keyword):
+    def search(self, keyword, singer=None):
         response = Request.jsonGet(url='http://s.music.163.com/search/get/', params={
             'type': 1,
             's': keyword
         })
         if 'code' in response and response['code'] == 200:
-            return response['result']['songs']
+            result = []
+            # 遍历歌曲
+            for song in response['result']['songs']:
+                # 遍历歌手
+                song['singer'] = '未知歌手'
+                for artist in song['artists']:
+                    if singer and artist['name'] == singer:
+                        song['singer'] = singer
+                        result.append(song)
+                        break
+                    else:
+                        song['singer'] += artist['name'] + ' '
+                song['singer'] = song['singer'].strip()
+            return result
         else:
             return []
-    pass
+    
+    # 搜索歌曲 取第一首
+    def searchSingle(self, keyword, singer=None):
+        result = self.search(keyword, singer)
+        if result:
+            return result[0]
+        else:
+            return None
 
     # 批量获取歌曲链接
     def getUrl(self, songIds):

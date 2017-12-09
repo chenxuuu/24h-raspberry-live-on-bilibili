@@ -32,10 +32,12 @@ class MediaService(Service):
     
     # 播放音乐
     def playMusic(self, music):
-        self.log.debug(music)
+        self.log.info('[Music] 开始播放[%s]点播的[%s]' % (music['username'], music['name']))
         command = ffmpeg().getMusic(music=music['filename'], output=self.getRTMPUrl(), image='./resource/img/darksouls.jpg')
+        command = "%s 2>> ./log/ffmpeg.log" % command
         self.log.debug(command)
-        os.system("%s >> ./log/song.log" % command)
+        os.system(command)
+        self.log.info('[Music] [%s]播放结束' % music['name'])
         pass
 
     # 获取推流地址
