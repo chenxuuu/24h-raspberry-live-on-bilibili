@@ -46,9 +46,9 @@ class Danmu(object):
 
                 # 判断弹幕是否被处理过
                 thisTimestamp = time.mktime(time.strptime(danmu['timeline'], "%Y-%m-%d %H:%M:%S"))
-                if thisTimestamp <= configTimestamp:
+                if configTimestamp >= thisTimestamp:
                     continue
-
+                
                 self.config.set(module='danmu', key='timestamp', value=thisTimestamp)
                 
                 result.append({
@@ -79,7 +79,6 @@ class Danmu(object):
                 time.sleep(1.5)
             return True
         
-        print(text)
         # 准备数据
         self.sendLock = True
         try:

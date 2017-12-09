@@ -1,24 +1,25 @@
 from util.Log import Log
-from service.Danmu import DanmuService
-from downloader.NeteaseMusic import *
-
 import signal
 
-music = NeteaseMusic()
-songList = music.search('成都')
-if songList:
-    songId = songList[0]['id']
-    print(music.getLyric(songId))
+from service.Media import MediaService
+from service.Danmu import DanmuService
+from service.Download import DownloadService
 
 log = Log('Main')
+mediaService = MediaService()
 danmuService = DanmuService()
+downloadService = DownloadService()
 
 def exitHandler(signum, frame):
     log.success('请等待 Service 退出...')
+    mediaService.stop()
     danmuService.stop()
+    downloadService.stop()
 
 if __name__ == '__main__':
-    # danmuService.start()
+    mediaService.start()
+    danmuService.start()
+    downloadService.start()
 
     signal.signal(signal.SIGINT, exitHandler)
     signal.signal(signal.SIGTERM, exitHandler)

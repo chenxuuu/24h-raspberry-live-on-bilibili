@@ -1,6 +1,7 @@
 import urllib
 import urllib.request
 import json
+import socket
 
 class Request(object):
 
@@ -43,4 +44,6 @@ class Request(object):
     
     @staticmethod
     def download(url, savePath, callback=None):
+        # 设置下载超时时间
+        socket.setdefaulttimeout(600)
         urllib.request.urlretrieve(url, savePath, callback)

@@ -73,7 +73,10 @@ class NeteaseMusic(object):
         musicResult = self.getSingleUrl(songId)
         if musicResult and 'url' in musicResult:
             musicUrl = musicResult['url']
-            Request.download(musicUrl, './downloader/download/%s.mp3' % filename, callback)
+            filename = './downloader/download/%s.mp3' % filename
+            Request.download(musicUrl, filename, callback)
+
+            return filename
         else:
             return False
 

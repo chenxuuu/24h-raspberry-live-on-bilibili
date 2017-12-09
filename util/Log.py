@@ -6,7 +6,7 @@ class Log(object):
         logger = logging.getLogger(name)
         # 定义输出格式
         consoleHandler = logging.StreamHandler()
-        formatter = ColoredFormatter('%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s%(reset)s')
+        formatter = ColoredFormatter('%(log_color)s[%(asctime)s][%(name)s][%(levelname)s] %(message)s%(reset)s')
         consoleHandler.setFormatter(formatter)
         logger.addHandler(consoleHandler)
 
