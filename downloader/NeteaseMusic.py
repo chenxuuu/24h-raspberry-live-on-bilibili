@@ -16,7 +16,8 @@ class NeteaseMusic(object):
     # aes-128-cbc
     def aesEncode(self, data, key):
         return AESCipher(key=key).encrypt(data, self.config['IV'])
-
+    
+    # 预处理Post数据
     def prepare(self, data):
         result = { 'params': self.aesEncode(json.dumps(data), self.config['nonce']) }
         result['params'] = self.aesEncode(result['params'], self.config['secretKey'])
@@ -62,6 +63,7 @@ class NeteaseMusic(object):
         else:
             return result[0]
 
+    # 通过歌曲id下载歌曲
     def download(self, songId, filename=None, callback=None):
         # 名称处理
         if not filename:
@@ -72,5 +74,34 @@ class NeteaseMusic(object):
         if musicResult and 'url' in musicResult:
             musicUrl = musicResult['url']
             Request.download(musicUrl, './downloader/download/%s.mp3' % filename, callback)
+        else:
+            return False
+
+    def getLyric(self, songId):
+        response = Request.jsonPost(url='http://music.163.com/weapi/song/lyric?csrf_token=', params=self.prepare({
+            'id': songId,
+            'os': 'pc',
+            'lv': -1,
+            'kv': -1,
+            'tv': -1,
+            'csrf_token': ''
+        }))
+
+        if 'code' in response and response['code'] == 200:
+            result = {
+                'lyric': '',
+                'tlyric': ''
+            }
+            # 获取歌词
+            if 'lrc' in response and 'lyric' in response['lrc']:
+                result['lyric'] = response['lrc']['lyric']
+            else:
+                return False
+
+            # 获取翻译歌词
+            if 'tlyric' in response and 'lyric' in response['tlyric']:
+                result['tlyric'] = response['tlyric']['lyric']
+
+            return result
         else:
             return False

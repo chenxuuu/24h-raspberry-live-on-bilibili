@@ -4,6 +4,12 @@ from downloader.NeteaseMusic import *
 
 import signal
 
+music = NeteaseMusic()
+songList = music.search('成都')
+if songList:
+    songId = songList[0]['id']
+    print(music.getLyric(songId))
+
 log = Log('Main')
 danmuService = DanmuService()
 
