@@ -2,11 +2,13 @@ from util.Queue import DownloadQueue, PlayQueue
 
 from downloader.NeteaseMusic import NeteaseMusic
 from service.Service import Service
+from util.Danmu import Danmu
 from util.Log import Log
 
 class DownloadService(Service):
     
     def __init__(self):
+        self.danmu = Danmu()
         self.log = Log('Download Service')
         self.musicDownloader = NeteaseMusic()
 
@@ -31,6 +33,7 @@ class DownloadService(Service):
     def musicDownload(self, song):
 
         # 搜索歌曲并下载
+        self.danmu.send('正在下载%s' % song['name'])
         filename = self.musicDownloader.download(song['id'])
 
         if filename:

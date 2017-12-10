@@ -49,7 +49,7 @@ class DanmuService(Service):
         command = danmu['command']
         song = []
         # 按歌曲名-歌手点歌
-        if command.find('-'):
+        if command.find('-') != -1:
             detail = command.split('-')
             if len(detail) == 2:
                 song = self.musicDownloader.searchSingle(detail[0], detail[1])
@@ -62,6 +62,7 @@ class DanmuService(Service):
             song = self.musicDownloader.searchSingle(danmu['command'])
 
         if song:
+            self.danmu.send('%s点歌成功' % song['name'])
             DownloadQueue.put({
                     'type': 'music',
                     'id': song['id'],
@@ -71,4 +72,6 @@ class DanmuService(Service):
                 })
         else:
             # 未找到歌曲
+            self.danmu.send('找不到%s' % danmu['command'])
+            self.log.info('找不到%s' % danmu['command'])
             pass

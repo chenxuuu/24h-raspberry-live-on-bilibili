@@ -35,15 +35,21 @@ class NeteaseMusic(object):
             # 遍历歌曲
             for song in response['result']['songs']:
                 # 遍历歌手
-                song['singer'] = '未知歌手'
+                song['singer'] = ''
+                isSelect = True
                 for artist in song['artists']:
                     if singer and artist['name'] == singer:
                         song['singer'] = singer
-                        result.append(song)
-                        break
+                        isSelect = True
+                    elif singer:
+                        isSelect = False
                     else:
+                        isSelect = True
                         song['singer'] += artist['name'] + ' '
-                song['singer'] = song['singer'].strip()
+                if isSelect:
+                    song['singer'] = song['singer'].strip()
+                    result.append(song)
+
             return result
         else:
             return []
