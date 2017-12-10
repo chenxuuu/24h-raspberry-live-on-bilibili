@@ -42,7 +42,7 @@ class MediaService(Service):
         self.log.debug(command)
         os.system(command)
         # 播放完毕
-        os.remove(music=music['filename'])
+        os.remove(path=music['filename'])
         self.log.info('[Music] [%s]播放结束' % music['name'])
 
     # 获取推流地址
