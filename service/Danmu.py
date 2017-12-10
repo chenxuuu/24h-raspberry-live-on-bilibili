@@ -14,13 +14,17 @@ class DanmuService(Service):
         self.musicDownloader = NeteaseMusic()
         self.log = Log('Danmu Service')
         self.commandMap = {
-            '点歌': 'selectSongAction'
+            '点歌': 'selectSongAction',
+            'id': 'selectSongByIdAction'
         }
         pass
 
     def run(self):
-        self.parseDanmu()
-        time.sleep(1.5)
+        try:
+            self.parseDanmu()
+            time.sleep(1.5)
+        except Exception as e:
+            self.log.error(e)
 
     # 解析弹幕
     def parseDanmu(self):
@@ -75,3 +79,24 @@ class DanmuService(Service):
             self.danmu.send('找不到%s' % danmu['command'])
             self.log.info('找不到%s' % danmu['command'])
             pass
+
+    # 通过Id点歌
+    def selectSongByIdAction(self, danmu):
+        command = danmu['command']
+        try:
+            song = self.musicDownloader.getInfo(command)
+            if song:
+                self.danmu.send('%s点歌成功' % song['name'])
+                DownloadQueue.put({
+                        'type': 'music',
+                        'id': song['id'],
+                        'name': song['name'],
+                        'singer': song['singer'],
+                        'username': danmu['name']
+                    })
+            else:
+                # 未找到歌曲
+                raise Exception('未找到歌曲')
+        except Exception as e:
+            self.danmu.send('找不到%s' % danmu['command'])
+            self.log.info('找不到%s' % danmu['command'])

@@ -106,6 +106,27 @@ class NeteaseMusic(object):
         else:
             return False
 
+    # 通过ID获取歌曲信息
+    def getInfo(self, id):
+        response = Request.jsonPost(url='http://music.163.com/weapi/v3/song/detail?csrf_token=', params=self.prepare({
+            'c': json.dumps([{ 'id': id }]),
+            'csrf_token': ''
+        }))
+        if 'code' in response and response['code'] == 200:
+            if 'songs' in response and response['songs']:
+                song = response['songs'][0]
+                return {
+                    'id': song['id'],
+                    'name': song['name'],
+                    'singer': song['ar'][0]['name']
+                }
+                pass
+            else:
+                return False
+        else:
+            return False
+
+    # 获取歌词
     def getLyric(self, songId):
         response = Request.jsonPost(url='http://music.163.com/weapi/song/lyric?csrf_token=', params=self.prepare({
             'id': songId,
