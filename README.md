@@ -14,6 +14,14 @@ GitHub：[https://github.com/chenxuuu/24h-raspberry-live-on-bilibili.git](https:
 
 git.osc：[https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git](https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git)
 
+----
+
+### 同时也可以去用smilecc大佬重构的版本：
+
+[blive-raspberry（https://github.com/smilecc/blive-raspberry）](https://github.com/smilecc/blive-raspberry)
+
+-------
+
 本项目基本编写完毕，已经有的功能为：
 
 - 弹幕点歌
