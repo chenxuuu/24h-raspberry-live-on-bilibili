@@ -12,6 +12,7 @@ import ass_maker
 import var_set
 import _thread
 import random
+import dht11
 
 path = var_set.path         #引入设置路径
 roomid = var_set.roomid     #引入设置房间号
@@ -416,6 +417,13 @@ def pick_msg(s, user):
             print('[log]video not found')
     elif (s.find('温度') > -1):
         send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
+        try:
+            temp = dht11.get_dht11()
+            send_dm_long("温度："+str(temp[0])+"℃，湿度："+str(temp[1])+"%")
+        except Exception as e:  #防炸
+            print('shit')
+            print(e)
+            send_dm_long("温湿度获取失败")
     elif (s.find('歌单') == 0):
         send_dm_long('已收到'+user+'的指令')
         _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))
