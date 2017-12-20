@@ -477,7 +477,7 @@ def send_dm(s):
     
 #每条弹幕最长只能发送20字符，过长的弹幕分段发送
 def send_dm_long(s):
-    n=20
+    n=var_set.dm_size
     for hx in sensitive_word:                  #处理和谐词，防止点播机的回复被和谐
         if (s.find(hx) > -1):
             s = s.replace(hx, hx[0]+" "+hx[1:])    #在和谐词第一个字符后加上一个空格
