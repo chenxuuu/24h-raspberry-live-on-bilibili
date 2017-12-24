@@ -131,6 +131,21 @@ fc-list :lang=zh-cn
 
 （字体安装来自[ubuntu下 bilibili直播推流 ffmpeg rtmp推送](https://ppx.ink/2.ppx)）
 
+### 设置显存
+
+打开树莓派设置：
+
+```Bash
+sudo raspi-config
+```
+
+选择`Advanced Options`，回车
+
+选择`Memory Split`，回车
+
+把数值改成`256`
+
+回车，接着退出设置，重启树莓派
 
 ### 烹饪&摆盘：
 
