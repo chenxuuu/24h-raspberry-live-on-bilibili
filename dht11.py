@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import time
 
 def get_dht11():
-    channel =4 
+    channel =17 
     data = []
     j = 0
 
