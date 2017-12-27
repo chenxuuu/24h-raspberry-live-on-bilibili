@@ -199,13 +199,13 @@ def download_av(video_url,user):
         send_dm_long('正在下载'+video_title)
         #send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
-        os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
-        print('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
-        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv') == False):
-            os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'rendering1')
-            print('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'rendering1')
+        os.system('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')
+        print('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')
+        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv')):
+            v_format = 'flv'
+        else if(os.path.isfile(path+'/downloads/'+filename+'rendering1.mp4')):
             v_format = 'mp4'
-        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.'+v_format) == False):
+        else:
             send_dm_long('视频'+video_title+'下载失败，请重试')
             return
         ass_maker.make_ass(filename+'ok','点播人：'+user+"\\N视频："+video_title+"\\N"+video_url,path)
