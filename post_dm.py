@@ -274,6 +274,7 @@ def pick_msg(s, user):
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
         send_dm_long('已收到'+user+'的指令')
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
         try:
@@ -291,9 +292,11 @@ def pick_msg(s, user):
             send_dm_long('出错了：没这首歌')
     elif (s.find('id+') == 0):
         send_dm_long('已收到'+user+'的指令')
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
         send_dm_long('已收到'+user+'的指令')
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
         try:
@@ -311,6 +314,7 @@ def pick_msg(s, user):
             send_dm_long('出错了：没这首歌')
     elif (s.find('id') == 0):
         send_dm_long('已收到'+user+'的指令')
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id', '', 1), 'id',user))
     elif (s.find('点歌') == 0):
         try:
@@ -409,6 +413,7 @@ def pick_msg(s, user):
         except:
             print('[log]video not found')
     elif (s.find('av') == 0):
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         try:
             if(s.find('p') == -1):
                 send_dm_long('已收到'+user+'的指令')
@@ -434,6 +439,7 @@ def pick_msg(s, user):
             send_dm_long("温湿度获取失败")
     elif (s.find('歌单') == 0):
         send_dm_long('已收到'+user+'的指令')
+        s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))
     # else:
     #     print('not match anything')
@@ -537,7 +543,7 @@ def get_dm_loop():
             if(check_dm(t_get)):
                 print('[log]['+t_get['timeline']+']'+t_get['nickname']+':'+t_get['text'])
                 #send_dm('用户'+t_get['nickname']+'发送了'+t_get['text']) #别开，会死循环
-                text = t_get['text'].replace('-', '')   #剔除弹幕中的所有空格
+                #text = t_get['text'].replace('-', '')   #剔除弹幕中的所有空格
                 pick_msg(text,t_get['nickname'])   #新弹幕检测是否匹配为命令
         temp_dm = dm_result
         time.sleep(1)
