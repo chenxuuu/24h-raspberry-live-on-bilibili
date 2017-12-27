@@ -192,6 +192,7 @@ def download_av(video_url,user):
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
     try:
+        v_format = 'flv'
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
         video_title = video_info['title']
@@ -200,6 +201,13 @@ def download_av(video_url,user):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))
         os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
         print('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1')
+        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv') == False):
+            os.system('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'rendering1')
+            print('you-get '+video_url+' --format=mp4 -o '+path+'/downloads -O '+filename+'rendering1')
+            v_format = 'mp4'
+        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.'+v_format) == False):
+            send_dm_long('视频'+video_title+'下载失败，请重试')
+            return
         ass_maker.make_ass(filename+'ok','点播人：'+user+"\\N视频："+video_title+"\\N"+video_url,path)
         ass_maker.make_info(filename+'ok','视频：'+video_title+",点播人："+user,path)
         send_dm_long('视频'+video_title+'下载完成，等待渲染')
@@ -207,9 +215,9 @@ def download_av(video_url,user):
             time.sleep(1)
         encode_lock = True
         send_dm_long('视频'+video_title+'正在渲染')
-        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -aspect 16:9 -vf "scale=1280:720, ass='+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
+        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.'+v_format+'" -aspect 16:9 -vf "scale=1280:720, ass='+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
         encode_lock = False
-        del_file(filename+'rendering1.flv')
+        del_file(filename+'rendering1.'+v_format)
         os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
     except:
