@@ -203,7 +203,7 @@ def download_av(video_url,user):
         print('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')
         if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv')):
             v_format = 'flv'
-        else if(os.path.isfile(path+'/downloads/'+filename+'rendering1.mp4')):
+        elif(os.path.isfile(path+'/downloads/'+filename+'rendering1.mp4')):
             v_format = 'mp4'
         else:
             send_dm_long('视频'+video_title+'下载失败，请重试')
