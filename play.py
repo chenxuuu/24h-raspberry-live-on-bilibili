@@ -38,9 +38,17 @@ while True:
         count=0     #总共匹配到的点播文件统计
         for f in files:
             if((f.find('.mp3') != -1) and (f.find('.download') == -1)): #如果是mp3文件
-                audio = MP3(path+'/downloads/'+f)   #获取mp3文件信息
-                seconds=audio.info.length   #获取时长
-                bitrate=audio.info.bitrate  #获取码率
+                print(path+'/downloads/'+f)
+                seconds = 600
+                bitrate = 0
+                try:
+                    audio = MP3(path+'/downloads/'+f)   #获取mp3文件信息
+                    seconds=audio.info.length   #获取时长
+                    bitrate=audio.info.bitrate  #获取码率
+                except Exception as e:
+                    print(e)
+                    bitrate = 99999999999
+                
                 print('mp3 long:'+convert_time(seconds))
                 if((seconds > 600) | (bitrate > 400000)):  #大于十分钟就不播放/码率限制400k以下
                     print('too long/too big,delete')
