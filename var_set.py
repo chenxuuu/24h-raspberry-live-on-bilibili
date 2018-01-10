@@ -31,3 +31,5 @@ maxbitrate='3000'
 dm_size=20
 #每段弹幕的最大长度（20级以后可发30字）
 
+use_dht11 = false
+#是否使用dht11温湿度传感器
