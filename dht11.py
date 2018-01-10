@@ -1,8 +1,11 @@
 #coding:utf-8
 import RPi.GPIO as GPIO
 import time
+import var_set
 
 def get_dht11():
+    if(var_set.use_dht11 == false):
+        raise Exception("wrong!")
     channel =17 
     data = []
     j = 0
