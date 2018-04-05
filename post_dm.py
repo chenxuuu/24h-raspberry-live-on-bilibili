@@ -18,6 +18,7 @@ path = var_set.path         #引入设置路径
 roomid = var_set.roomid     #引入设置房间号
 cookie = var_set.cookie     #引入设置cookie
 download_api_url = var_set.download_api_url #引入设置的音乐下载链接获取接口
+csrf_token = var_set.csrf_token
 
 dm_lock = False         #弹幕发送锁，用来排队
 encode_lock = False     #视频渲染锁，用来排队
@@ -453,19 +454,21 @@ def send_dm(s):
     global cookie
     global roomid
     global dm_lock
+    global csrf_token
     while (dm_lock):
         #print('[log]wait for send dm')
         time.sleep(1)
     dm_lock = True
     try:
-        url = "http://api.live.bilibili.com/msg/send"
+        url = "https://api.live.bilibili.com/msg/send"
         postdata =urllib.parse.urlencode({	
         'color':'16777215',
         'fontsize':'25',
         'mode':'1',
         'msg':s,
         'rnd':'1510756027',
-        'roomid':roomid
+        'roomid':roomid,
+        'csrf_token':csrf_token
         }).encode('utf-8')
         header = {
         "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
