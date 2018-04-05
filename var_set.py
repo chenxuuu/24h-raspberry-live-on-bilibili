@@ -16,7 +16,7 @@ csrf_token = ''
 download_api_url = 'http://qq.papapoi.com/163/'
 #获取音乐链接的api网址，服务器性能有限，尽量请换成自己的，php文件在php文件夹
 
-rtmp = 'rtmp://txy.live-send.acg.tv/live-txy/'
+rtmp = 'rtmp://xxxxx.live-send.acg.tv/live-xxxxx/'
 #直播给的两个码，填在这里
 live_code = ''
 

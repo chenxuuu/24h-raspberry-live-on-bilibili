@@ -506,10 +506,11 @@ def send_dm_long(s):
 def get_dm():
     global temp_dm
     global roomid
+    global csrf_token
     url = "http://api.live.bilibili.com/ajax/msg"
     postdata =urllib.parse.urlencode({	
     'token:':'',
-    'csrf_token:':'',
+    'csrf_token:':csrf_token,
     'roomid':roomid
     }).encode('utf-8')
     header = {
@@ -522,7 +523,7 @@ def get_dm():
     "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
     }
     req = urllib.request.Request(url,postdata,header)
-    dm_result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+    dm_result = json.loads(urllib.request.urlopen(req,timeout=1).read().decode('utf-8'))
     #for t_get in dm_result['data']['room']:
         #print('[log]['+t_get['timeline']+']'+t_get['nickname']+':'+t_get['text'])
     return dm_result
@@ -541,7 +542,6 @@ def get_dm_loop():
     temp_dm = get_dm()
     while True:
         dm_result = get_dm()
-        can_show = False
         for t_get in dm_result['data']['room']:
             if(check_dm(t_get)):
                 print('[log]['+t_get['timeline']+']'+t_get['nickname']+':'+t_get['text'])
