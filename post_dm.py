@@ -13,6 +13,7 @@ import var_set
 import _thread
 import random
 import dht11
+import get_info
 
 path = var_set.path         #引入设置路径
 roomid = var_set.roomid     #引入设置房间号
@@ -430,7 +431,8 @@ def pick_msg(s, user):
         except:
             print('[log]video not found')
     elif (s.find('温度') > -1):
-        send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
+        #send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
+        send_dm_long(get_info.getInfo())
         try:
             temp = dht11.get_dht11()
             send_dm_long("温度："+str(temp[0])+"℃，湿度："+str(temp[1])+"%")
