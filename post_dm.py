@@ -326,7 +326,7 @@ def pick_msg(s, user):
             send_dm_long('出错了：没这首歌')
     elif (s.find('喵') > -1):
         replay = ["喵？？", "喵喵！", "喵。。喵？", "喵喵喵~", "喵！"]
-        send_dm_long(replay[random.randint(0, len(replay))])  #用于测试是否崩掉
+        send_dm_long(replay[random.randint(0, len(replay)-1)])  #用于测试是否崩掉
     elif (s == '切歌'):   #切歌请求
         if(encode_lock):    #切歌原理为killall ffmpeg，但是如果有渲染任务，kill后也会结束渲染进程，会出错
             send_dm_long('有渲染任务，无法切歌')
