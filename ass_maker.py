@@ -2,7 +2,7 @@
 import os
 import time
 import re
-
+from mutagen.mp3 import MP3
 
 
 
@@ -14,6 +14,7 @@ import re
 def make_ass(filename, info, path, ass = '', asst = ''):
     ass = lrc_to_ass(ass)
     asst = tlrc_to_ass(asst)
+    timer_get = timer_create(filename,path)
     file_content = '''[Script Info]
 Title: Default ASS file
 ScriptType: v4.00+
@@ -42,7 +43,7 @@ Dialogue: 2,0:00:00.00,9:00:00.00,left_down,,0,0,0,,'''+info+'''
 Dialogue: 2,0:00:00.00,9:00:00.00,right_down,,0,0,0,,基于树莓派3B\\N'''+'点播日期：'+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+'''
 Dialogue: 2,0:00:00.00,9:00:00.00,left_up,,0,0,0,,晨旭的树莓派点播台~\\N已开源，源码见https://biu.ee/pi-live\\N使用时请保留源码链接
 Dialogue: 2,0:00:00.00,9:00:00.00,right_up,,0,0,0,,弹幕点播方法请看直播间简介哦~\\N手机请点击直播间标题查看
-'''+ass+asst
+'''+ass+asst+timer_get
     file = open(path+'/downloads/'+str(filename)+'.ass','w')    #保存ass字幕文件
     file.write(file_content)
     file.close()
@@ -53,6 +54,27 @@ def make_info(filename, info, path):
     file = open(path+'/downloads/'+str(filename)+'.info','w')
     file.write(file_content)
     file.close()
+
+def s3t(sec):
+    m, s = divmod(sec, 60)
+    h, m = divmod(m, 60)
+    return ("%01d:%02d:%02d" % (h, m, s))
+
+def timer_create(filename, path):
+    result='\r\n'
+    if(os.path.isfile(path+'/downloads/'+str(filename)+'.mp3')):
+        try:
+            audio = MP3(path+'/downloads/'+str(filename)+'.mp3')   #获取mp3文件信息
+            seconds=int(audio.info.length)   #获取时长
+            for i in range(1, seconds):
+                result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,歌曲时间:'+s3t(i)+'/'+s3t(seconds)+'\r\n'
+        except Exception as e:
+            print('shit')
+            print(e)
+    else:
+        for i in range(1, 3600):
+            result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,视频时间:'+s3t(i)+'\r\n'
+    return result
 
 
 #滚动歌词生成
