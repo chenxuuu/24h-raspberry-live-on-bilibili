@@ -4,7 +4,7 @@ import time
 import var_set
 
 def get_dht11():
-    if(var_set.use_dht11 == false):
+    if(var_set.use_dht11 == False):
         raise Exception("wrong!")
     channel =17 
     data = []
