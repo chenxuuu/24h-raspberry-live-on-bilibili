@@ -3,6 +3,7 @@ import os
 import time
 import re
 from mutagen.mp3 import MP3
+from moviepy.editor import VideoFileClip
 
 
 
@@ -62,6 +63,7 @@ def s3t(sec):
 
 def timer_create(filename, path):
     result='\r\n'
+    filename = filename.replace('ok','')
     if(os.path.isfile(path+'/downloads/'+str(filename)+'.mp3')):
         try:
             audio = MP3(path+'/downloads/'+str(filename)+'.mp3')   #获取mp3文件信息
@@ -72,8 +74,34 @@ def timer_create(filename, path):
             print('shit')
             print(e)
     else:
-        for i in range(1, 3600):
-            result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,视频时间:'+s3t(i)+'\r\n'
+        try:
+            if(os.path.isfile(path+'/downloads/'+str(filename)+'.mp4')):    #获取视频文件信息
+                print(path+'/downloads/'+str(filename)+'.mp4')
+                vv = VideoFileClip(path+'/downloads/'+str(filename)+'.mp4')
+                seconds=int(vv.duration)   #获取时长
+                print('time seconds:'+str(seconds))
+                for i in range(1, seconds):
+                    result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,视频时间:'+s3t(i)+'/'+s3t(seconds)+'\r\n'
+            elif(os.path.isfile(path+'/downloads/'+str(filename)+'rendering1.flv')):
+                print(path+'/downloads/'+str(filename)+'rendering1.flv')
+                vv = VideoFileClip(path+'/downloads/'+str(filename)+'rendering1.flv')
+                seconds=int(vv.duration)   #获取时长
+                print('time seconds:'+str(seconds))
+                for i in range(1, seconds):
+                    result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,视频时间:'+s3t(i)+'/'+s3t(seconds)+'\r\n'
+            elif(os.path.isfile(path+'/downloads/'+str(filename)+'rendering1.mp4')):
+                print(path+'/downloads/'+str(filename)+'rendering1.mp4')
+                vv = VideoFileClip(path+'/downloads/'+str(filename)+'rendering1.mp4')
+                seconds=int(vv.duration)   #获取时长
+                print('time seconds:'+str(seconds))
+                for i in range(1, seconds):
+                    result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,视频时间:'+s3t(i)+'/'+s3t(seconds)+'\r\n'
+            else:
+                print('no files found!')
+                print(path+'/downloads/'+str(filename))
+        except Exception as e:
+            print('shit')
+            print(e)
     return result
 
 
