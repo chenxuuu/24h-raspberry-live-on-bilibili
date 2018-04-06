@@ -110,6 +110,12 @@ sudo pip3 install mutagen
 sudo pip3 install you-get
 ```
 
+安装python3的moviepy库：
+
+```Bash
+sudo pip3 install moviepy
+```
+
 安装screen:
 
 ```Bash
