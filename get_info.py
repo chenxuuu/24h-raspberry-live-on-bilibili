@@ -66,5 +66,5 @@ def getInfo():
     print('DISK Total Space = '+str(DISK_total)+'B')
     print('DISK Used Space = '+str(DISK_used)+'B')
     print('DISK Used Percentage = '+str(DISK_perc))
-    return 'CPU温度：'+CPU_temp+'℃，CPU占用：'+CPU_usage+'%，内存占用：'+str(RAM_used)+'/'+str(RAM_total)+'MB，磁盘占用：'+str(DISK_perc)
+    return 'CPU温度：'+CPU_temp+'℃，CPU占用：'+CPU_usage+'%，内存占用：'+str(int(RAM_used))+'MB，磁盘占用：'+str(DISK_perc)
     
