@@ -491,6 +491,8 @@ def pick_msg(s, user):
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))
+    elif (s.find('查询') == 0):
+        send_dm_long(user+'的瓜子余额还剩'+str(get_coin(user))+'个')
     # else:
     #     print('not match anything')
 
