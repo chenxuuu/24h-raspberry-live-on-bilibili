@@ -14,6 +14,7 @@ import _thread
 import random
 import dht11
 import get_info
+import numpy
 
 path = var_set.path         #引入设置路径
 roomid = var_set.roomid     #引入设置房间号
@@ -83,6 +84,14 @@ def get_download_url(s, t, user, song = "nothing"):
     if(clean_files()):  #检查空间是否在设定值以内，并自动删除多余视频缓存
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
+    if t == 'id' and var_set.use_gift_check:   #检查送过的礼物数量
+        if check_coin(user, 100) == False:
+            send_dm_long('用户'+user+'赠送的瓜子不够点歌哦,还差'+str(100-get_coin(user))+'瓜子的礼物')
+            return
+    elif t == 'mv' and var_set.use_gift_check:
+        if check_coin(user, 500) == False:
+            send_dm_long('用户'+user+'赠送的瓜子不够点mv哦,还差'+str(500-get_coin(user))+'瓜子的礼物')
+            return
     send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s}) #格式化参数
@@ -146,7 +155,11 @@ def playlist_download(id,user):
     f = urllib.request.urlopen(download_api_url + "?%s" % params)   #设定获取的网址
     try:
         playlist = json.loads(f.read().decode('utf-8'))  #获取结果，并反序化
-        send_dm_long('正在下载歌单：'+playlist['playlist']['name']+'，共'+str(len(playlist['playlist']['tracks']))+'首')
+        if len(playlist['playlist']['tracks'])*100 > get_coin(user) and var_set.use_gift_check:
+            send_dm_long('用户'+user+'赠送的瓜子不够点'+len(playlist['playlist']['tracks'])+
+            '首歌哦,还差'+str(len(playlist['playlist']['tracks'])*100-get_coin(user))+'瓜子的礼物')
+        else:
+            send_dm_long('正在下载歌单：'+playlist['playlist']['name']+'，共'+str(len(playlist['playlist']['tracks']))+'首')
     except Exception as e:  #防炸
         print('shit')
         print(e)
@@ -192,6 +205,9 @@ def download_av(video_url,user):
     global encode_lock
     if(clean_files()):
         send_dm_long('树莓存储空间已爆炸，请联系up')
+        return
+    if check_coin(user, 500) == False and var_set.use_gift_check:
+        send_dm_long('用户'+user+'赠送的瓜子不够点视频哦,还差'+str(500-get_coin(user))+'瓜子的礼物')
         return
     try:
         v_format = 'flv'
@@ -256,6 +272,36 @@ def search_mv(s,user):
     result = json.loads(urllib.request.urlopen(req).read().decode('utf-8')) #获取结果
     result_id = result['result']['mvs'][0]['id']    #提取mv id
     _thread.start_new_thread(get_download_url, (result_id, 'mv', user,s))   #扔到下载那里下载
+
+#获取赠送过的瓜子数量
+def get_coin(user):
+    gift_count = 0
+    try:
+        gift_count = numpy.load('users/'+user+'.npy')
+    except:
+        gift_count = 0
+    return gift_count
+
+#扣除赠送过的瓜子数量
+def take_coin(user, take_sum):
+    gift_count = 0
+    try:
+        gift_count = numpy.load('users/'+user+'.npy')
+    except:
+        gift_count = 0
+    gift_count = gift_count - take_sum
+    try:
+        numpy.save('users/'+user+'.npy', gift_count)
+    except:
+        print('create error')
+
+#检查并扣除指定数量的瓜子
+def check_coin(user, take_sum):
+    if get_coin(user) >= take_sum:
+        take_coin(user, take_sum)
+        return True
+    else:
+        return False
 
 #切歌请求次数统计
 jump_to_next_counter = 0

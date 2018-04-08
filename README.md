@@ -38,6 +38,8 @@ git.osc：[https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git](h
 - 可点播b站任意视频（会员限制除外，番剧根据b站规定，禁止点播）
 - 已点播歌曲、视频自动进入缓存，无人点播时随机播放
 - 存储空间达到设定值时，自动按点播时间顺序删除音乐、视频来释放空间
+- 实时显示歌曲/视频长度
+- 根据投喂礼物的多少来决定是否允许点播
 
 已知问题：
 
@@ -116,6 +118,12 @@ sudo pip3 install you-get
 sudo pip3 install moviepy
 ```
 
+安装python3的aiohttp库：
+
+```Bash
+sudo pip3 install aiohttp
+```
+
 安装screen:
 
 ```Bash
@@ -187,6 +195,10 @@ screen python3 post_dm.py
 #按ctrl+a,按ctrl+d
 screen python3 play.py
 #按ctrl+a,按ctrl+d
+screen python3 bilibiliClient.py
+#如果开启了礼物监控，请启动这个，如果不用礼物就能点歌，可以不开
+#礼物监控使用了弹幕姬python版：https://github.com/lyyyuna/bilibili_danmu
+#感谢弹幕姬python版作者的分享
 ```
 
 如有不对的地方，请提交issue，也欢迎各位改进脚本并pr
