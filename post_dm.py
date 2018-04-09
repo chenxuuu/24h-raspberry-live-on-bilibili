@@ -143,6 +143,10 @@ def get_download_url(s, t, user, song = "nothing"):
             print('[error]log error')
     except: #下载出错
         send_dm_long('出错了：请检查命令或重试')
+        if t == 'id' and var_set.use_gift_check:   #归还用掉的瓜子
+            give_coin(user,100)
+        elif t == 'mv' and var_set.use_gift_check:
+            give_coin(user,500)
         print('[log]下载文件出错：'+t+str(s)+',url:'+url)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
@@ -168,79 +172,51 @@ def playlist_download(id,user):
     for song in playlist['playlist']['tracks']:
         print('name:'+song['name']+'id:'+str(song['id']))
         get_download_url(song['id'], 'id', user, song['name'])
-
-    
-
-#下载b站番剧视频，传入值：网址、点播人用户名
-def download_bilibili(video_url,user):
+        
+#下载b站任意视频，传入值：网址、点播人用户名
+def download_av(video_url,user):
     global encode_lock  #视频渲染锁，用来排队
     if(clean_files()):  #检查空间是否在设定值以内，并自动删除多余视频缓存
         send_dm_long('树莓存储空间已爆炸，请联系up')
         return
+    if check_coin(user, 500) == False and var_set.use_gift_check:   #扣掉瓜子数
+        send_dm_long('用户'+user+'赠送的瓜子不够点视频哦,还差'+str(500-get_coin(user))+'瓜子的礼物')
+        return
     try:
+        v_format = 'flv'
         print('[log]downloading bilibili video:'+str(video_url))
         video_info = json.loads(os.popen('you-get '+video_url+' --json').read())    #获取视频标题，标题错误则说明点播参数不对，跳到except
         video_title = video_info['title']   #获取标题
         send_dm_long('正在下载'+video_title)
         #send_dm('注意，视频下载十分费时，请耐心等待')
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #用时间戳设定文件名
-        os.system('you-get '+video_url+' --format=flv -o '+path+'/downloads -O '+filename+'rendering1') #下载视频文件
-        ass_maker.make_ass(filename+'ok',"点播人："+user+"\\N番剧："+video_title+"\\N"+video_url,path) #生成字幕
-        ass_maker.make_info(filename+'ok','番剧：'+video_title+",点播人："+user,path)  #生成介绍信息，用来查询
-        send_dm_long('番剧'+video_title+'下载完成，等待渲染')
-        while (encode_lock):    #渲染锁，如果现在有渲染任务，则无限循环等待
-            time.sleep(1)   #等待
-        encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
-        send_dm_long('番剧'+video_title+'正在渲染')
-        os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.flv" -aspect 16:9 -vf "scale=1280:720, ass='+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
-        encode_lock = False #关闭渲染锁，以便其他任务继续渲染
-        del_file(filename+'rendering1.flv') #删除渲染所用的原文件
-        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
-        send_dm_long('番剧'+video_title+'渲染完毕，已加入播放队列')
-    except: #报错提示，一般只会出现在获取标题失败时出现，就是点播参数不对
-        send_dm_long('出错了：请检查命令或重试')
-        
-#下载b站任意视频，传入值：网址、点播人用户名
-#此部分逻辑与“下载b站番剧视频”部分完全相同，不另行作注释解释
-def download_av(video_url,user):
-    global encode_lock
-    if(clean_files()):
-        send_dm_long('树莓存储空间已爆炸，请联系up')
-        return
-    if check_coin(user, 500) == False and var_set.use_gift_check:
-        send_dm_long('用户'+user+'赠送的瓜子不够点视频哦,还差'+str(500-get_coin(user))+'瓜子的礼物')
-        return
-    try:
-        v_format = 'flv'
-        print('[log]downloading bilibili video:'+str(video_url))
-        video_info = json.loads(os.popen('you-get '+video_url+' --json').read())
-        video_title = video_info['title']
-        send_dm_long('正在下载'+video_title)
-        #send_dm('注意，视频下载十分费时，请耐心等待')
-        filename = str(time.mktime(datetime.datetime.now().timetuple()))
-        os.system('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')
+        os.system('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')  #下载视频文件
         print('you-get '+video_url+' -o '+path+'/downloads -O '+filename+'rendering1')
-        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv')):
+        if(os.path.isfile(path+'/downloads/'+filename+'rendering1.flv')):   #判断视频格式
             v_format = 'flv'
         elif(os.path.isfile(path+'/downloads/'+filename+'rendering1.mp4')):
             v_format = 'mp4'
         else:
             send_dm_long('视频'+video_title+'下载失败，请重试')
+            if var_set.use_gift_check:
+                give_coin(user,500)
             return
-        ass_maker.make_ass(filename+'ok','点播人：'+user+"\\N视频："+video_title+"\\N"+video_url,path)
-        ass_maker.make_info(filename+'ok','视频：'+video_title+",点播人："+user,path)
+        ass_maker.make_ass(filename+'ok','点播人：'+user+"\\N视频："+video_title+"\\N"+video_url,path)  #生成字幕
+        ass_maker.make_info(filename+'ok','视频：'+video_title+",点播人："+user,path)   #生成介绍信息，用来查询
         send_dm_long('视频'+video_title+'下载完成，等待渲染')
-        while (encode_lock):
-            time.sleep(1)
-        encode_lock = True
+        while (encode_lock):    #渲染锁，如果现在有渲染任务，则无限循环等待
+            time.sleep(1)   #等待
+        encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
         send_dm_long('视频'+video_title+'正在渲染')
         os.system('ffmpeg -i "'+path+'/downloads/'+filename+'rendering1.'+v_format+'" -aspect 16:9 -vf "scale=1280:720, ass='+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
-        encode_lock = False
-        del_file(filename+'rendering1.'+v_format)
-        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv')
+        encode_lock = False #关闭渲染锁，以便其他任务继续渲染
+        del_file(filename+'rendering1.'+v_format)   #删除渲染所用的原文件
+        os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
         send_dm_long('视频'+video_title+'渲染完毕，已加入播放队列')
-    except:
+    except: #报错提示，一般只会出现在获取标题失败时出现，就是点播参数不对
         send_dm_long('出错了：请检查命令或重试')
+        if var_set.use_gift_check:
+            give_coin(user,500)
 
 #搜索歌曲并下载
 def search_song(s,user):
@@ -303,6 +279,19 @@ def check_coin(user, take_sum):
         return True
     else:
         return False
+
+#给予赠送过的瓜子数量
+def give_coin(user, give_sum):
+    gift_count = 0
+    try:
+        gift_count = numpy.load('users/'+user+'.npy')
+    except:
+        gift_count = 0
+    gift_count = gift_count + give_sum
+    try:
+        numpy.save('users/'+user+'.npy', gift_count)
+    except:
+        print('create error')
 
 #切歌请求次数统计
 jump_to_next_counter = 0
@@ -450,17 +439,6 @@ def pick_msg(s, user):
             send_dm_long('渲染列表展示完毕，一共'+str(songs_count)+'个')
         else:
             send_dm_long('渲染列表前5个展示完毕，一共'+str(songs_count)+'个')
-    elif (s.find('番剧') == 0):
-        send_dm_long('您的直播间因“禁止盗播新番”，已被管x员“切断”，请更改直播内容。')
-        return
-        try:
-            send_dm_long('已收到'+user+'的指令')
-            #番剧网址格式：https://bangumi.bilibili.com/anime/123/play#456
-            ture_url=s.replace('.','/play#')
-            ture_url=ture_url.replace('番剧','https://bangumi.bilibili.com/anime/')
-            _thread.start_new_thread(download_bilibili, (ture_url,user))
-        except:
-            print('[log]video not found')
     elif (s.find('av') == 0):
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         try:
