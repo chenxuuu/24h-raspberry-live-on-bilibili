@@ -191,13 +191,11 @@ git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 所有配置完成后，开启直播，然后启动脚本即可：
 
 ```Bash
-screen python3 post_dm.py
-#按ctrl+a,按ctrl+d
 screen python3 play.py
 #按ctrl+a,按ctrl+d
 screen python3 bilibiliClient.py
-#如果开启了礼物监控，请启动这个，如果不用礼物就能点歌，可以不开
-#礼物监控使用了弹幕姬python版：https://github.com/lyyyuna/bilibili_danmu
+#按ctrl+a,按ctrl+d
+#弹幕监控使用了弹幕姬python版：https://github.com/lyyyuna/bilibili_danmu
 #感谢弹幕姬python版作者的分享
 ```
 
