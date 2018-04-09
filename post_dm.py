@@ -607,10 +607,10 @@ def test():
 
 print('程序已启动，连接房间id：'+roomid)
 send_dm_long('弹幕监控已启动，可以点歌了')
-while True: #防炸
-    try:
-        get_dm_loop()   #开启弹幕获取循环函数
-    except Exception as e:  #防炸
-        print('shit')
-        print(e)
-        dm_lock = False #解开弹幕锁，以免因炸了而导致弹幕锁没解开，进而导致一直锁着发不出弹幕
+# while True: #防炸
+#     try:
+#         get_dm_loop()   #开启弹幕获取循环函数
+#     except Exception as e:  #防炸
+#         print('shit')
+#         print(e)
+#         dm_lock = False #解开弹幕锁，以免因炸了而导致弹幕锁没解开，进而导致一直锁着发不出弹幕

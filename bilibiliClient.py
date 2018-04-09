@@ -10,6 +10,7 @@ import re
 import var_set
 import numpy
 import os
+import post_dm
 
 TURN_WELCOME = 1
 TURN_GIFT = 1
@@ -135,16 +136,17 @@ class bilibiliClient():
         if cmd == 'DANMU_MSG':
             commentText = dic['info'][1]
             commentUser = dic['info'][2][1]
-            isAdmin = dic['info'][2][2] == '1'
-            isVIP = dic['info'][2][3] == '1'
-            if isAdmin:
-                commentUser = '管理员 ' + commentUser
-            if isVIP:
-                commentUser = 'VIP ' + commentUser
-            # try:
-            #     print (commentUser + ' say: ' + commentText)
-            # except:
-            #     pass
+            # isAdmin = dic['info'][2][2] == '1'
+            # isVIP = dic['info'][2][3] == '1'
+            # if isAdmin:
+            #     commentUser = '管理员 ' + commentUser
+            # if isVIP:
+            #     commentUser = 'VIP ' + commentUser
+            try:
+                print (commentUser + ' 说: ' + commentText)
+                post_dm.pick_msg(commentText,commentUser)
+            except:
+                pass
             return
         if cmd == 'SEND_GIFT' and TURN_GIFT == 1:
             GiftName = dic['data']['giftName']
@@ -188,6 +190,7 @@ class bilibiliClient():
                     numpy.save('users/'+GiftUser+'.npy', gift_count)
                 except:
                     print('create error')
+                post_dm.send_dm_long('感谢'+GiftUser+'送的'+str(GiftNum)+'个'+GiftName+'！')
             except:
                 pass
             return
