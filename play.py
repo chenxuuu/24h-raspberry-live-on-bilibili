@@ -57,8 +57,8 @@ while True:
                     pic_files.sort()    #排序数组
                     pic_ran = random.randint(0,len(pic_files)-1)    #随机选一张图片
                     #推流
-                    print('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
-                    os.system('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/downloads/'+f+'" -vf ass="'+path+"/downloads/"+f.replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                     try:    #放完后删除mp3文件、删除字幕、删除点播信息
                         shutil.move(path+'/downloads/'+f,path+'/default_mp3/')
                         shutil.move(path+'/downloads/'+f.replace(".mp3",'')+'.ass',path+'/default_mp3/')
@@ -74,8 +74,8 @@ while True:
             if((f.find('ok.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):   #如果是有ok标记的flv文件
                 print('flv:'+f)
                 #直接推流
-                print('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
-                os.system('ffmpeg -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                print('ffmpeg -threads 0 -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                os.system('ffmpeg -threads 0 -re -i "'+path+"/downloads/"+f+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.rename(path+'/downloads/'+f,path+'/downloads/'+f.replace("ok",""))   #修改文件名，以免下次循环再次匹配
                 _thread.start_new_thread(remove_v, (f.replace("ok",""),))   #异步搬走文件，以免推流卡顿
                 count+=1    #点播统计加一
@@ -94,15 +94,15 @@ while True:
                 print('mp3 long:'+convert_time(seconds))
                 #推流
                 if(os.path.isfile(path+'/default_mp3/'+mp3_files[mp3_ran].replace(".mp3",'')+'.ass')):
-                    print('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+"/default_mp3/"+mp3_files[mp3_ran].replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
-                    os.system('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+"/default_mp3/"+mp3_files[mp3_ran].replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+"/default_mp3/"+mp3_files[mp3_ran].replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+"/default_mp3/"+mp3_files[mp3_ran].replace(".mp3",'')+'.ass'+'" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                 else:
-                    print('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
-                    os.system('ffmpeg -threads 2 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec aac -b:a 192k -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                    os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
             if(mp3_files[mp3_ran].find('.flv') != -1):  #如果为flv视频
                 #直接推流
-                print('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
-                os.system('ffmpeg -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                print('ffmpeg -threads 0 -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                os.system('ffmpeg -threads 0 -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
     except Exception as e:
         print(e)
 
