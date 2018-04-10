@@ -156,7 +156,7 @@ def get_download_url(s, t, user, song = "nothing"):
 #下载歌单
 def playlist_download(id,user):
     params = urllib.parse.urlencode({'playlist': str(id)}) #格式化参数
-    f = urllib.request.urlopen(download_api_url + "?%s" % params)   #设定获取的网址
+    f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=3)   #设定获取的网址
     try:
         playlist = json.loads(f.read().decode('utf-8'))  #获取结果，并反序化
         if len(playlist['playlist']['tracks'])*100 > get_coin(user) and var_set.use_gift_check:
@@ -222,7 +222,7 @@ def download_av(video_url,user):
 def search_song(s,user):
     print('[log]searching song:'+s)
     params = urllib.parse.urlencode({'type': 1, 's': s})    #格式化参数
-    f = urllib.request.urlopen("http://s.music.163.com/search/get/?%s" % params)    #设置接口网址
+    f = urllib.request.urlopen("http://s.music.163.com/search/get/?%s" % params,timeout=3)    #设置接口网址
     search_result = json.loads(f.read().decode('utf-8'))    #获取结果
     result_id = search_result["result"]["songs"][0]["id"]   #提取歌曲id
     _thread.start_new_thread(get_download_url, (result_id, 'id', user,s))   #扔到下载那里下载
@@ -246,7 +246,7 @@ def search_mv(s,user):
     "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
     }
     req = urllib.request.Request(url,postdata,header)   #设置接口网址
-    result = json.loads(urllib.request.urlopen(req).read().decode('utf-8')) #获取结果
+    result = json.loads(urllib.request.urlopen(req,timeout=3).read().decode('utf-8')) #获取结果
     result_id = result['result']['mvs'][0]['id']    #提取mv id
     _thread.start_new_thread(get_download_url, (result_id, 'mv', user,s))   #扔到下载那里下载
 
@@ -510,7 +510,7 @@ def send_dm(s):
         "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0"
         }
         req = urllib.request.Request(url,postdata,header)
-        dm_result = json.loads(urllib.request.urlopen(req).read().decode('utf-8'))
+        dm_result = json.loads(urllib.request.urlopen(req,timeout=3).read().decode('utf-8'))
         if len(dm_result['msg']) > 0:
             print('[error]弹幕发送失败：'+s)
             print(dm_result)
