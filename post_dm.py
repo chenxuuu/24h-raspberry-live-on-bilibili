@@ -7,7 +7,6 @@ import time
 import os
 import sys
 import datetime
-import time
 import ass_maker
 import var_set
 import _thread
