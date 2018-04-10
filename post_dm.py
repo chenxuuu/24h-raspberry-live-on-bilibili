@@ -95,18 +95,18 @@ def get_download_url(s, t, user, song = "nothing"):
     send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
     params = urllib.parse.urlencode({t: s}) #格式化参数
-    f = urllib.request.urlopen(download_api_url + "?%s" % params)   #设定获取的网址
+    f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=5)   #设定获取的网址
     url = f.read().decode('utf-8')  #读取结果
     try:
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #获取时间戳，用来当作文件名
         if(t == 'id'):  #当参数为歌曲时
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3') #下载歌曲
             lyric_get = urllib.parse.urlencode({'lyric': s})    #格式化参数
-            lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get)  #设定获取歌词的网址
+            lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get,timeout=5)  #设定获取歌词的网址
             lyric = lyric_w.read().decode('utf-8')  #获取歌词文件
 
             tlyric_get = urllib.parse.urlencode({'tlyric': s})    #格式化参数
-            tlyric_w = urllib.request.urlopen(download_api_url + "?%s" % tlyric_get)  #设定获取歌词的网址
+            tlyric_w = urllib.request.urlopen(download_api_url + "?%s" % tlyric_get,timeout=5)  #设定获取歌词的网址
             tlyric = tlyric_w.read().decode('utf-8')  #获取歌词文件
 
             if(song == "nothing"):  #当直接用id点歌时
