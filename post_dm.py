@@ -50,27 +50,42 @@ def clean_files():
         files.sort()    #排序文件，以便按日期删除多余文件
         for f in files:
             if((f.find('.flv') != -1) & (check_free())):    #检查可用空间是否依旧超过设置大小，flv文件
-                try:
-                    os.remove(path+'/default_mp3/'+f)   #删除文件
-                except Exception as e:
-                    print(e)
+                del_file_default_mp3(f)   #删除文件
             elif((f.find('.mp3') != -1) & (check_free())):    #检查可用空间是否依旧超过设置大小，mp3文件
-                try:
-                    os.remove(path+'/default_mp3/'+f)   #删除文件
-                    os.remove(path+'/default_mp3/'+f.replace(".mp3",'')+'.ass')
-                    os.remove(path+'/default_mp3/'+f.replace(".mp3",'')+'.info')
-                except Exception as e:
-                    print(e)
+                del_file_default_mp3(f)   #删除文件
+                del_file_default_mp3(f.replace(".mp3",'')+'.ass')
+                del_file_default_mp3(f.replace(".mp3",'')+'.info')
             elif(check_free() == False):    #符合空间大小占用设置时，停止删除操作
                 is_boom = False
     else:
         is_boom = False
     return is_boom
 
+#删除之前残留的没渲染完的文件
+def last_files():
+    files = os.listdir(path+'/downloads') #获取下载文件夹下所有文件
+    for f in files:
+        if f.find('rendering.flv') != -1:
+            del_file(f)   #删除文件
+            del_file(f.replace('rendering.flv','ok.info'))
+            del_file(f.replace('rendering.flv','ok.ass'))
+        elif f.find('.mp4') != -1 or f.find('rendering1') != -1:
+            del_file(f)
+last_files()
+
 #用于删除文件，防止报错
 def del_file(f):
     try:
+        print('delete'+path+'/downloads/'+f)
         os.remove(path+'/downloads/'+f)
+    except:
+        print('delete error')
+
+#用于删除文件，防止报错
+def del_file_default_mp3(f):
+    try:
+        print('delete'+path+'/default_mp3/'+f)
+        os.remove(path+'/default_mp3/'+f)
     except:
         print('delete error')
 
