@@ -308,6 +308,12 @@ def give_coin(user, give_sum):
     except:
         print('create error')
 
+def check_night():
+    print(time.localtime()[3])
+    if (time.localtime()[3] >= 23 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
+        send_dm_long('现在是晚间专场哦~命令无效')
+        return True
+
 #切歌请求次数统计
 jump_to_next_counter = 0
 rp_lock = False
@@ -326,10 +332,14 @@ def pick_msg(s, user):
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
+        if check_night():
+            return
         try:
             send_dm_long('已收到'+user+'的指令')
             search_mv(s.replace('mv+', '', 1),user)
@@ -337,6 +347,8 @@ def pick_msg(s, user):
             print('[log]mv not found')
             send_dm_long('出错了：没这mv')
     elif (s.find('song+') == 0):
+        if check_night():
+            return
         try:
             send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('song+', '', 1),user)
@@ -344,14 +356,20 @@ def pick_msg(s, user):
             print('[log]song not found')
             send_dm_long('出错了：没这首歌')
     elif (s.find('id+') == 0):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
+        if check_night():
+            return
         try:
             send_dm_long('已收到'+user+'的指令')
             search_mv(s.replace('mv', '', 1),user)
@@ -359,6 +377,8 @@ def pick_msg(s, user):
             print('[log]mv not found')
             send_dm_long('出错了：没这mv')
     elif (s.find('song') == 0):
+        if check_night():
+            return
         try:
             send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('song', '', 1),user)
@@ -366,10 +386,14 @@ def pick_msg(s, user):
             print('[log]song not found')
             send_dm_long('出错了：没这首歌')
     elif (s.find('id') == 0):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id', '', 1), 'id',user))
     elif (s.find('点歌') == 0):
+        if check_night():
+            return
         try:
             send_dm_long('已收到'+user+'的指令')
             search_song(s.replace('点歌', '', 1),user)
@@ -393,6 +417,8 @@ def pick_msg(s, user):
             send_dm_long('已执行切歌动作')
             os.system('killall ffmpeg') #强行结束ffmpeg进程
     elif ((s == '点播列表') or (s == '歌曲列表')):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')   #获取目录下所有文件
         files.sort()    #按文件名（下载时间）排序
@@ -424,6 +450,8 @@ def pick_msg(s, user):
         else:
             send_dm_long('点播列表前十个展示完毕，一共'+str(songs_count)+'个')
     elif (s == '渲染列表'):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令，正在查询')
         files = os.listdir(path+'/downloads')   #获取目录下所有文件
         files.sort()    #按文件名（下载时间）排序
@@ -455,6 +483,8 @@ def pick_msg(s, user):
         else:
             send_dm_long('渲染列表前5个展示完毕，一共'+str(songs_count)+'个')
     elif (s.find('av') == 0):
+        if check_night():
+            return
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         try:
             if(s.find('p') == -1):
@@ -481,6 +511,8 @@ def pick_msg(s, user):
             print(e)
             send_dm_long("温湿度获取失败")
     elif (s.find('歌单') == 0):
+        if check_night():
+            return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(playlist_download, (s.replace('歌单', '', 1),user))

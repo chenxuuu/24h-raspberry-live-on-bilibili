@@ -34,3 +34,6 @@ use_dht11 = False
 
 use_gift_check = False
 #是否使用投礼物才让点歌的设定
+
+play_videos_when_night = False
+#是否播放晚间专属视频？

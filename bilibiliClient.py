@@ -100,7 +100,7 @@ class bilibiliClient():
                 if num==0 or num==1 or num==2:
                     tmp = await self._reader.read(4)
                     num3, = unpack('!I', tmp)
-                    print ('房间人数为 %s' % num3)
+                    #print ('房间人数为 %s' % num3)
                     self._UserCount = num3
                     continue
                 elif num==3 or num==4:
@@ -198,6 +198,7 @@ class bilibiliClient():
             commentUser = dic['data']['uname']
             try:
                 print ('欢迎 ' + commentUser + ' 进入房间。。。。')
+                post_dm.send_dm_long('欢迎' + commentUser + '进入直播间！')
             except:
                 pass
             return
