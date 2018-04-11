@@ -33,6 +33,26 @@ def remove_v(filename):
 
 while True:
     try:
+        if (time.localtime()[3] >= 23 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
+            print('night is comming~')  #晚上到咯~
+            night_files = os.listdir(path+'/night') #获取所有缓存文件
+            night_files.sort()    #排序文件
+            night_ran = random.randint(0,len(night_files)-1)    #随机抽一个文件
+            if(night_files[night_ran].find('.flv') != -1):  #如果为flv视频
+                #直接暴力推流
+                print('ffmpeg -threads 0 -re -i "'+path+"/night/"+night_files[night_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+                os.system('ffmpeg -threads 0 -re -i "'+path+"/night/"+night_files[night_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
+            if(night_files[night_ran].find('.mp3') != -1):  #如果为mp3
+                pic_files = os.listdir(path+'/default_pic') #获取准备的图片文件夹中的所有图片
+                pic_files.sort()    #排序数组
+                pic_ran = random.randint(0,len(pic_files)-1)    #随机选一张图片
+                audio = MP3(path+'/night/'+night_files[night_ran])    #获取mp3文件信息
+                seconds=audio.info.length   #获取时长
+                print('mp3 long:'+convert_time(seconds))
+                print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/night/'+night_files[night_ran]+'" -vf ass="'+path+'/night/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+                os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/night/'+night_files[night_ran]+'" -vf ass="'+path+'/night/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
+            continue
+        
         files = os.listdir(path+'/downloads')   #获取文件夹下全部文件
         files.sort()    #排序文件，按文件名（点播时间）排序
         count=0     #总共匹配到的点播文件统计
@@ -71,6 +91,7 @@ while True:
                 except:
                     print('delete error')
                 count+=1    #点播统计加一
+                break
             if((f.find('ok.flv') != -1) and (f.find('.download') == -1) and (f.find('rendering') == -1)):   #如果是有ok标记的flv文件
                 print('flv:'+f)
                 #直接推流
@@ -79,6 +100,7 @@ while True:
                 os.rename(path+'/downloads/'+f,path+'/downloads/'+f.replace("ok",""))   #修改文件名，以免下次循环再次匹配
                 _thread.start_new_thread(remove_v, (f.replace("ok",""),))   #异步搬走文件，以免推流卡顿
                 count+=1    #点播统计加一
+                break
         if(count == 0):     #点播统计为0，说明点播的都放完了
             print('no media')
             mp3_files = os.listdir(path+'/default_mp3') #获取所有缓存文件
