@@ -79,7 +79,6 @@ while True:
                 os.rename(path+'/downloads/'+f,path+'/downloads/'+f.replace("ok",""))   #修改文件名，以免下次循环再次匹配
                 _thread.start_new_thread(remove_v, (f.replace("ok",""),))   #异步搬走文件，以免推流卡顿
                 count+=1    #点播统计加一
-            break
         if(count == 0):     #点播统计为0，说明点播的都放完了
             print('no media')
             mp3_files = os.listdir(path+'/default_mp3') #获取所有缓存文件
