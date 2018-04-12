@@ -509,7 +509,7 @@ def pick_msg(s, user):
         except Exception as e:  #防炸
             print('shit')
             print(e)
-            send_dm_long("温湿度获取失败")
+            #send_dm_long("温湿度获取失败")
     elif (s.find('歌单') == 0):
         if check_night():
             return
