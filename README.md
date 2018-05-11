@@ -178,6 +178,8 @@ git clone https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git
 请修改下载里的`var_set.py`文件中的各种变量
 其中，`cookie`需要使用小号（尽量使用小号，并且b站账户好像需要绑定手机号后才能发送弹幕）在直播间，打开浏览器审查元素，先发一条弹幕，再查看`network`选项卡，找到`name`为`send`的项目，`Request head`中的`Cookie`即为`cookie`变量的值。注意设置后，账号不能点击网页上的“退出登陆”按键，换账号请直接清除当前cookie再刷新
 
+`csrf_token`请填写`Request head`中的`csrf_token`
+
 `post_dm.py`文件的`if(user == '接待喵'):  #防止自循环`请改为你的机器人的名字
 
 标注`#debug使用，请自己修改`的代码请自行修改，此为debug用的代码
