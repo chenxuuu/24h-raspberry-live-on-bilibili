@@ -11,6 +11,9 @@ import var_set
 import numpy
 import os
 import post_dm
+import urllib
+import urllib.request
+import json
 
 TURN_WELCOME = 1
 TURN_GIFT = 1
@@ -165,26 +168,12 @@ class bilibiliClient():
                 except:
                     print('delete error')
                 print('获取'+GiftUser+'送过'+str(gift_count)+'个瓜子')
-                if GiftName == '辣条':
-                    gift_count = gift_count + GiftNum * 100
-                elif GiftName == '亿圆':
-                    gift_count = gift_count + GiftNum * 1000
-                elif GiftName == '喵娘':
-                    gift_count = gift_count + GiftNum * 5200
-                elif GiftName == 'B坷垃':
-                    gift_count = gift_count + GiftNum * 9900
-                elif GiftName == '节奏风暴':
-                    gift_count = gift_count + GiftNum * 100000
-                elif GiftName == '小电视':
-                    gift_count = gift_count + GiftNum * 1245000
-                elif GiftName == '233':
-                    gift_count = gift_count + GiftNum * 233
-                elif GiftName == '666':
-                    gift_count = gift_count + GiftNum * 666
-                elif GiftName == '情书':
-                    gift_count = gift_count + GiftNum * 2000
-                elif GiftName == '桃花':
-                    gift_count = gift_count + GiftNum * 500
+                f = urllib.request.urlopen("https://api.live.bilibili.com/gift/v3/live/gift_config")
+                gift_info = json.loads(f.read().decode('utf-8'))
+                for i in gift_info['data']:
+                    if i['name'] == GiftName:
+                        gift_count = gift_count + GiftNum * i['price']
+                        print('[log]gift match',i['name'],i['price'])
                 print(GiftUser+'瓜子数改为'+str(gift_count))
                 try:
                     numpy.save('users/'+GiftUser+'.npy', gift_count)
