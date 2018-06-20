@@ -34,7 +34,7 @@ def remove_v(filename):
 
 while True:
     try:
-        if (time.localtime()[3] >= 23 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
+        if (time.localtime()[3] >= 22 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
             print('night is comming~')  #晚上到咯~
             night_files = os.listdir(path+'/night') #获取所有缓存文件
             night_files.sort()    #排序文件
@@ -51,7 +51,7 @@ while True:
                 seconds=audio.info.length   #获取时长
                 print('mp3 long:'+convert_time(seconds))
                 if not os.path.isfile(path+'/night/'+night_files[night_ran]+'.ass'):
-                    ass_maker.make_ass('../night/'+night_files[night_ran].replace('.mp3',''),'当前是晚间专属时间哦~时间范围：晚上23点-凌晨5点\\N大家晚安哦~做个好梦~\\N当前文件名：'+night_files[night_ran],path)
+                    ass_maker.make_ass('../night/'+night_files[night_ran].replace('.mp3',''),'当前是晚间专属时间哦~时间范围：晚上22点-凌晨5点\\N大家晚安哦~做个好梦~\\N当前文件名：'+night_files[night_ran],path)
                 print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/night/'+night_files[night_ran]+'" -vf ass="'+path+'/night/'+night_files[night_ran]+'.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/night/'+night_files[night_ran]+'" -vf ass="'+path+'/night/'+night_files[night_ran].replace('.mp3','')+'.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
             continue

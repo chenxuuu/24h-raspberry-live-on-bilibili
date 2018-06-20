@@ -310,7 +310,7 @@ def give_coin(user, give_sum):
 
 def check_night():
     print(time.localtime()[3])
-    if (time.localtime()[3] >= 23 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
+    if (time.localtime()[3] >= 22 or time.localtime()[3] <= 5) and var_set.play_videos_when_night:
         send_dm_long('现在是晚间专场哦~命令无效')
         return True
 
