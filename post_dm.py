@@ -109,13 +109,10 @@ def get_download_url(s, t, user, song = "nothing"):
             return
     send_dm_long('正在下载'+t+str(s))
     print('[log]getting url:'+t+str(s))
-    params = urllib.parse.urlencode({t: s}) #格式化参数
-    f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=5)   #设定获取的网址
-    url = f.read().decode('utf-8')  #读取结果
     try:
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #获取时间戳，用来当作文件名
         if(t == 'id'):  #当参数为歌曲时
-            urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp3') #下载歌曲
+            urllib.request.urlretrieve("http://music.163.com/song/media/outer/url?id="+str(s)+".mp3", path+'/downloads/'+filename+'.mp3') #下载歌曲
             lyric_get = urllib.parse.urlencode({'lyric': s})    #格式化参数
             lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get,timeout=5)  #设定获取歌词的网址
             lyric = lyric_w.read().decode('utf-8')  #获取歌词文件
@@ -133,6 +130,9 @@ def get_download_url(s, t, user, song = "nothing"):
             send_dm_long(t+str(s)+'下载完成，已加入播放队列')
             print('[log]已添加排队项目：'+t+str(s))
         elif(t == 'mv'):    #当参数为mv时
+            params = urllib.parse.urlencode({t: s}) #格式化参数
+            f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=5)   #设定获取的网址
+            url = f.read().decode('utf-8')  #读取结果
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4') #下载mv
             if(song == "nothing"):  #当直接用id点mv时
                 ass_maker.make_ass(filename+'ok','当前MV网易云id：'+str(s)+"\\N点播人："+user,path)#生成字幕
@@ -162,11 +162,10 @@ def get_download_url(s, t, user, song = "nothing"):
             give_coin(user,100)
         elif t == 'mv' and var_set.use_gift_check:
             give_coin(user,500)
-        print('[log]下载文件出错：'+t+str(s)+',url:'+url)
+        print('[log]下载文件出错：'+t+str(s))
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
         del_file(filename+'.flv')
-    return url
 
 #下载歌单
 def playlist_download(id,user):
