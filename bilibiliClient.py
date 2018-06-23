@@ -212,4 +212,4 @@ try:
 except Exception as e:  #防炸
     print('shit')
     print(e)
-    os.execl("/usr/bin/python3", "bilibiliClient.py")#自动重启
+    os.system("screen -dm python3 "+vars.path+"/bilibiliClient.py")#自动重启
