@@ -86,12 +86,18 @@ libvpx:
 sudo apt-get install libvpx-dev
 ```
 
+libomxil-bellagio:
+
+```Bash
+sudo apt-get install libomxil-bellagio-dev
+```
+
 编译并安装ffmpeg（时间较长，半小时左右）：
 
 ```Bash
-wget http://ffmpeg.org/releases/ffmpeg-3.3.2.tar.bz2
-tar jxvf ffmpeg-3.3.2.tar.bz2
-cd ffmpeg-3.3.2
+wget http://ffmpeg.org/releases/ffmpeg-4.0.tar.bz2
+tar jxvf ffmpeg-4.0.tar.bz2
+cd ffmpeg-4.0
 sudo ./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --enable-libass --enable-libfreetype  --enable-omx --enable-omx-rpi --enable-encoder=h264_omx --enable-mmal --enable-hwaccel=h264_mmal --enable-decoder=h264_mmal
 make -j4
 sudo make install
