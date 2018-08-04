@@ -68,8 +68,6 @@ cd ..
 rm -rf x264
 ```
 
-（如果你觉得上面编译太慢，那可以用`sudo apt-get install libx264-dev`来代替）
-
 libmp3lame：
 
 ```Bash
