@@ -61,12 +61,14 @@ sudo apt-get -y install autoconf automake build-essential libass-dev libfreetype
 ```Bash
 git clone git://git.videolan.org/x264
 cd x264
-./configure --host=arm-unknown-linux-gnueabi --enable-static --disable-opencl
+./configure --host=arm-unknown-linux-gnueabi --enable-static --disable-opencl --enable-shared
 make
 sudo make install
 cd ..
 rm -rf x264
 ```
+
+（如果你觉得上面编译太慢，那可以用`sudo apt-get install libx264-dev`来代替）
 
 libmp3lame：
 
