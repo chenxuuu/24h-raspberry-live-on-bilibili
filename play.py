@@ -8,6 +8,8 @@ import var_set
 import shutil
 import _thread
 import ass_maker
+import post_dm
+import numpy
 
 path = var_set.path #引入设置路径
 rtmp = var_set.rtmp #引入设置的rtmp网址
@@ -125,6 +127,21 @@ while True:
                     print('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
                     os.system('ffmpeg -threads 0 -re -loop 1 -r 2 -t '+str(int(seconds))+' -f image2 -i "'+path+'/default_pic/'+pic_files[pic_ran]+'" -i "'+path+'/default_mp3/'+mp3_files[mp3_ran]+'" -vf ass="'+path+'/default.ass" -pix_fmt yuv420p -preset ultrafast -maxrate '+var_set.maxbitrate+'k -acodec copy -c:v h264_omx -f flv "'+rtmp+live_code+'"')
             if(mp3_files[mp3_ran].find('.flv') != -1):  #如果为flv视频
+                play_count = 510
+                try:
+                    play_count = numpy.load('users/play_count.npy')
+                except:
+                    play_count = 510
+                try:
+                    os.remove('users/play_count.npy')
+                except:
+                    print('delete error')
+                print('播放次数'+str(play_count)+'次')
+                try:
+                    numpy.save('users/play_count.npy', play_count+1)
+                except:
+                    print('create error')
+                post_dm.send_dm_long(str(play_count)+'次')
                 #直接推流
                 print('ffmpeg -threads 0 -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
                 os.system('ffmpeg -threads 0 -re -i "'+path+"/default_mp3/"+mp3_files[mp3_ran]+'" -vcodec copy -acodec copy -f flv "'+rtmp+live_code+'"')
