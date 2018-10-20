@@ -29,9 +29,6 @@ maxbitrate='3000'
 dm_size=20
 #每段弹幕的最大长度（20级以后可发30字）
 
-use_dht11 = False
-#是否使用dht11温湿度传感器
-
 use_gift_check = False
 #是否使用投礼物才让点歌的设定
 
