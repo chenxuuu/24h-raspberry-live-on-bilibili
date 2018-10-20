@@ -106,6 +106,18 @@ cd ..
 
 （以上有一部分代码参考自[ffmpeg源码编译安装（Compile ffmpeg with source）  Part 2 ： 扩展安装 - 人脑之战 - 博客园](http://www.cnblogs.com/yaoz/p/6944942.html)）
 
+安装python3：
+
+```Bash
+sudo apt-get install python3
+```
+
+安装pip3：
+
+```Bash
+sudo apt-get install python3-pip
+```
+
 安装python3的mutagen库：
 
 ```Bash
@@ -128,6 +140,18 @@ sudo pip3 install moviepy
 
 ```Bash
 sudo pip3 install aiohttp
+```
+
+安装python3的numpy需要的库：
+
+```Bash
+sudo apt-get install libatlas-base-dev
+```
+
+安装python3的requests库：
+
+```Bash
+sudo pip3 install requests
 ```
 
 安装screen:
