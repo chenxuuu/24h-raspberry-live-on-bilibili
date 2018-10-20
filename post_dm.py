@@ -12,7 +12,6 @@ import ass_maker
 import var_set
 import _thread
 import random
-import dht11
 import get_info
 import numpy
 
@@ -156,13 +155,14 @@ def get_download_url(s, t, user, song = "nothing"):
             log_file.close()
         except:
             print('[error]log error')
-    except: #下载出错
+    except Exception as e: #下载出错
         send_dm_long('出错了：请检查命令或重试')
         if t == 'id' and var_set.use_gift_check:   #归还用掉的瓜子
             give_coin(user,100)
         elif t == 'mv' and var_set.use_gift_check:
             give_coin(user,500)
         print('[log]下载文件出错：'+t+str(s))
+        print(e)
         del_file(filename+'.mp3')
         del_file(filename+'.mp4')
         del_file(filename+'.flv')
@@ -186,7 +186,7 @@ def playlist_download(id,user):
     for song in playlist['playlist']['tracks']:
         print('name:'+song['name']+'id:'+str(song['id']))
         get_download_url(song['id'], 'id', user, song['name'])
-        
+
 #下载b站任意视频，传入值：网址、点播人用户名
 def download_av(video_url,user):
     global encode_lock  #视频渲染锁，用来排队
@@ -244,7 +244,7 @@ def search_song(s,user):
 #搜索mv并下载
 def search_mv(s,user):
     url = "http://music.163.com/api/search/get/"
-    postdata =urllib.parse.urlencode({	
+    postdata =urllib.parse.urlencode({
     's':s,
     'offset':'1',
     'limit':'10',
@@ -502,13 +502,6 @@ def pick_msg(s, user):
     elif (s.find('温度') > -1):
         #send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
         send_dm_long(get_info.getInfo())
-        try:
-            temp = dht11.get_dht11()
-            send_dm_long("温度："+str(temp[0])+"℃，湿度："+str(temp[1])+"%")
-        except Exception as e:  #防炸
-            print('shit')
-            print(e)
-            #send_dm_long("温湿度获取失败")
     elif (s.find('歌单') == 0):
         if check_night():
             return
@@ -536,7 +529,7 @@ def send_dm(s):
     dm_lock = True
     try:
         url = "https://api.live.bilibili.com/msg/send"
-        postdata =urllib.parse.urlencode({	
+        postdata =urllib.parse.urlencode({
         'color':'16777215',
         'fontsize':'25',
         'mode':'1',
@@ -566,7 +559,7 @@ def send_dm(s):
         print('[error]send dm error')
     time.sleep(1.5)
     dm_lock = False
-    
+
 #每条弹幕最长只能发送20字符，过长的弹幕分段发送
 def send_dm_long(s):
     n=var_set.dm_size
@@ -583,7 +576,7 @@ def get_dm():
     global roomid
     global csrf_token
     url = "http://api.live.bilibili.com/ajax/msg"
-    postdata =urllib.parse.urlencode({	
+    postdata =urllib.parse.urlencode({
     'token:':'',
     'csrf_token:':csrf_token,
     'roomid':roomid
