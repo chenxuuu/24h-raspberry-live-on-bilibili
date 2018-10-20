@@ -331,12 +331,16 @@ def pick_msg(s, user):
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
+        send_dm_long('功能失效，请勿使用')
+        return
         if check_night():
             return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
+        send_dm_long('功能失效，请勿使用')
+        return
         if check_night():
             return
         try:
@@ -361,12 +365,16 @@ def pick_msg(s, user):
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
+        send_dm_long('功能失效，请勿使用')
+        return
         if check_night():
             return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
+        send_dm_long('功能失效，请勿使用')
+        return
         if check_night():
             return
         try:
