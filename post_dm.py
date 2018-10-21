@@ -14,6 +14,7 @@ import _thread
 import random
 import get_info
 import numpy
+import get_song_info
 
 path = var_set.path         #引入设置路径
 roomid = var_set.roomid     #引入设置房间号
@@ -112,6 +113,7 @@ def get_download_url(s, t, user, song = "nothing"):
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #获取时间戳，用来当作文件名
         if(t == 'id'):  #当参数为歌曲时
             urllib.request.urlretrieve("http://music.163.com/song/media/outer/url?id="+str(s)+".mp3", path+'/downloads/'+filename+'.mp3') #下载歌曲
+
             lyric_get = urllib.parse.urlencode({'lyric': s})    #格式化参数
             lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get,timeout=5)  #设定获取歌词的网址
             lyric = lyric_w.read().decode('utf-8')  #获取歌词文件
@@ -120,12 +122,21 @@ def get_download_url(s, t, user, song = "nothing"):
             tlyric_w = urllib.request.urlopen(download_api_url + "?%s" % tlyric_get,timeout=5)  #设定获取歌词的网址
             tlyric = tlyric_w.read().decode('utf-8')  #获取歌词文件
 
-            if(song == "nothing"):  #当直接用id点歌时
-                ass_maker.make_ass(filename,'当前歌曲网易云id：'+str(s)+"\\N点播人："+user,path,lyric,tlyric)  #生成字幕
-                ass_maker.make_info(filename,'id：'+str(s)+",点播人："+user,path)    #生成介绍信息，用来查询
-            else:   #当用关键字搜索点歌时
-                ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N点播关键词："+song+"\\N点播人："+user,path,lyric,tlyric)   #生成字幕
-                ass_maker.make_info(filename,'id：'+str(s)+",关键词："+song+",点播人："+user,path)    #生成介绍信息，用来查询
+            (song_temp,pic_url) = get_song_info.get_song_info(s)#获取歌曲信息
+            if song_temp != "":
+                song = "歌名："+song_temp
+            else:
+                song = "id："+song
+            if pic_url != "":
+                try:
+                    urllib.request.urlretrieve(pic_url+"?param=200y200", path+'/downloads/'+filename+'.jpg') #下载封面
+                except Exception as e: #下载出错
+                    print('[log]下载封面出错：'+pic_url)
+                    print(e)
+                    del_file(filename+'.jpg')
+
+            ass_maker.make_ass(filename,'当前网易云id：'+str(s)+"\\N"+song+"\\N点播人："+user,path,lyric,tlyric)   #生成字幕
+            ass_maker.make_info(filename,'id：'+str(s)+","+song+",点播人："+user,path)    #生成介绍信息，用来查询
             send_dm_long(t+str(s)+'下载完成，已加入播放队列')
             print('[log]已添加排队项目：'+t+str(s))
         elif(t == 'mv'):    #当参数为mv时
