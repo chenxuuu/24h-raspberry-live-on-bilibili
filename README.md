@@ -25,7 +25,7 @@ git.osc：[https://gitee.com/Young_For_You/24h-raspberry-live-on-bilibili.git](h
 本项目基本编写完毕，已经有的功能为：
 
 - 弹幕点歌
-- ~~弹幕点MV~~（接口暂时失效）
+- 弹幕点MV
 - 弹幕反馈（发送弹幕）
 - 旧版实现的视频推流功能
 - 自定义介绍字幕
