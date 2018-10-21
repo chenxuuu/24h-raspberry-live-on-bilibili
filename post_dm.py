@@ -132,7 +132,9 @@ def get_download_url(s, t, user, song = "nothing"):
             params = urllib.parse.urlencode({t: s}) #格式化参数
             f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=5)   #设定获取的网址
             url = f.read().decode('utf-8')  #读取结果
+            print('[log]获取'+t+str(s)+'网址：'+url)
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4') #下载mv
+            print('[log]'+t+str(s)+'下载完成')
             if(song == "nothing"):  #当直接用id点mv时
                 ass_maker.make_ass(filename+'ok','当前MV网易云id：'+str(s)+"\\N点播人："+user,path)#生成字幕
                 ass_maker.make_info(filename+'ok','MVid：'+str(s)+",点播人："+user,path)#生成介绍信息，用来查询
@@ -140,15 +142,18 @@ def get_download_url(s, t, user, song = "nothing"):
                 ass_maker.make_ass(filename+'ok','当前MV网易云id：'+str(s)+"\\NMV点播关键词："+song+"\\N点播人："+user,path)#生成字幕
                 ass_maker.make_info(filename+'ok','MVid：'+str(s)+",关键词："+song+",点播人："+user,path)#生成介绍信息，用来查询
             send_dm_long(t+str(s)+'下载完成，等待渲染')
+            print('[log]获取'+t+str(s)+'下载完成，等待渲染')
             while (encode_lock):    #渲染锁，如果现在有渲染任务，则无限循环等待
                 time.sleep(1)   #等待
             encode_lock = True  #进入渲染，加上渲染锁，防止其他视频一起渲染
             send_dm_long(t+str(s)+'正在渲染')
+            print('[log]获取'+t+str(s)+'正在渲染')
             os.system('ffmpeg -threads 1 -i "'+path+'/downloads/'+filename+'.mp4" -aspect 16:9 -vf "scale=1280:720, ass='+path+"/downloads/"+filename+'ok.ass'+'" -c:v libx264 -preset ultrafast -maxrate '+var_set.maxbitrate+'k -tune fastdecode -acodec aac -b:a 192k "'+path+'/downloads/'+filename+'rendering.flv"')
             encode_lock = False #关闭渲染锁，以便其他任务继续渲染
             del_file(filename+'.mp4')   #删除渲染所用的原文件
             os.rename(path+'/downloads/'+filename+'rendering.flv',path+'/downloads/'+filename+'ok.flv') #重命名文件，标记为渲染完毕（ok）
             send_dm_long(t+str(s)+'渲染完毕，已加入播放队列')
+            print('[log]获取'+t+str(s)+'渲染完毕，已加入播放队列')
         try:    #记录日志，已接近废弃
             log_file = open(path+'/songs.log', 'a')
             log_file.writelines(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ','+user+','+t+str(s)+'\r\n')
@@ -331,16 +336,12 @@ def pick_msg(s, user):
         return
     #下面的不作解释，很简单一看就懂
     if(s.find('mvid+') == 0):
-        send_dm_long('功能失效，请勿使用')
-        return
         if check_night():
             return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid+', '', 1), 'mv',user))
     elif (s.find('mv+') == 0):
-        send_dm_long('功能失效，请勿使用')
-        return
         if check_night():
             return
         try:
@@ -365,16 +366,12 @@ def pick_msg(s, user):
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('id+', '', 1), 'id',user))
     elif(s.find('mvid') == 0):
-        send_dm_long('功能失效，请勿使用')
-        return
         if check_night():
             return
         send_dm_long('已收到'+user+'的指令')
         s = s.replace(' ', '')   #剔除弹幕中的所有空格
         _thread.start_new_thread(get_download_url, (s.replace('mvid', '', 1), 'mv',user))
     elif (s.find('mv') == 0):
-        send_dm_long('功能失效，请勿使用')
-        return
         if check_night():
             return
         try:
