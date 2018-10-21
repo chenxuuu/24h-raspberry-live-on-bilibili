@@ -126,7 +126,7 @@ def get_download_url(s, t, user, song = "nothing"):
             if song_temp != "":
                 song = "歌名："+song_temp
             else:
-                song = "id："+song
+                song = "关键词："+song
             if pic_url != "":
                 try:
                     urllib.request.urlretrieve(pic_url+"?param=200y200", path+'/downloads/'+filename+'.jpg') #下载封面
@@ -336,13 +336,22 @@ def pick_msg(s, user):
     global jump_to_next_counter #切歌请求次数统计
     global encode_lock  #视频渲染任务锁
     global rp_lock
-    if ((user=='晨旭') | (user=='摘希喵喵喵')):    #debug使用，请自己修改
+    if ((user=='晨旭') | (user=='摘希喵喵喵') | (user=='王老菊未来科技种植园')):    #debug使用，请自己修改
         if(s=='锁定'):
             rp_lock = True
             send_dm_long('已锁定点播功能，不响应任何弹幕')
         if(s=='解锁'):
             rp_lock = False
             send_dm_long('已解锁点播功能，开始响应弹幕请求')
+        if(s=='清空列表'):
+            if(encode_lock):
+                send_dm_long('有渲染任务，无法清空')
+                return
+            #获取目录下所有文件
+            for i in os.listdir(path+'/downloads'):
+                del_file(i)
+            os.system('killall ffmpeg')
+            send_dm_long('已经清空列表~')
     if((user == '接待喵') | rp_lock):  #防止自循环
         return
     #下面的不作解释，很简单一看就懂
