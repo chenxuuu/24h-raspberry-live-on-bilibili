@@ -21,6 +21,7 @@ roomid = var_set.roomid     #引入设置房间号
 cookie = var_set.cookie     #引入设置cookie
 download_api_url = var_set.download_api_url #引入设置的音乐下载链接获取接口
 csrf_token = var_set.csrf_token
+deviceType = var_set.deviceType
 
 dm_lock = False         #弹幕发送锁，用来排队
 encode_lock = False     #视频渲染锁，用来排队
@@ -524,7 +525,7 @@ def pick_msg(s, user):
                 _thread.start_new_thread(download_av, (ture_url,user))
         except:
             print('[log]video not found')
-    elif (s.find('温度') > -1):
+    elif (s.find('温度') > -1 and deviceType == "pi"):
         #send_dm_long("CPU "+os.popen('vcgencmd measure_temp').readline())   #读取命令行得到的温度
         send_dm_long(get_info.getInfo())
     elif (s.find('歌单') == 0):
