@@ -18,7 +18,7 @@ def get_v():
     if deviceType == "pi":
         return "h264_omx"
     elif deviceType == "vps":
-        return "h264"
+        return "libx264"
 
 #格式化时间，暂时没啥用，以后估计也没啥用
 def convert_time(n):
