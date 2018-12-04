@@ -71,7 +71,7 @@ def timer_create(filename, path):
             for i in range(1, seconds):
                 result+='Dialogue: 2,'+s3t(i-1)+'.00,'+s3t(i)+'.00,right_down,,0,0,0,,歌曲时间:'+s3t(i)+'/'+s3t(seconds)+'\r\n'
         except Exception as e:
-            print('shit')
+            print('shit(get song length)')
             print(e)
     else:
         try:
@@ -100,7 +100,7 @@ def timer_create(filename, path):
                 print('no files found!')
                 print(path+'/downloads/'+str(filename))
         except Exception as e:
-            print('shit')
+            print('shit(get video length)')
             print(e)
     return result
 

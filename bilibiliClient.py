@@ -211,6 +211,6 @@ try:
     loop.close()
     os.system("screen -dm python3 "+var_set.path+"/bilibiliClient.py")#自动重启
 except Exception as e:  #防炸
-    print('shit')
+    print('shit(global)')
     print(e)
     os.system("screen -dm python3 "+var_set.path+"/bilibiliClient.py")#自动重启
