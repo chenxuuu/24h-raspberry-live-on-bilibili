@@ -113,7 +113,12 @@ def get_download_url(s, t, user, song = "nothing"):
     try:
         filename = str(time.mktime(datetime.datetime.now().timetuple()))    #获取时间戳，用来当作文件名
         if(t == 'id'):  #当参数为歌曲时
-            urllib.request.urlretrieve("http://music.163.com/song/media/outer/url?id="+str(s)+".mp3", path+'/downloads/'+filename+'.mp3') #下载歌曲
+            #伪装浏览器，防止屏蔽
+            opener=urllib.request.build_opener()
+            opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+            urllib.request.install_opener(opener)
+
+            urllib.request.urlretrieve("http://music.163.com/song/media/outer/url?id="+str(s), path+'/downloads/'+filename+'.mp3') #下载歌曲
 
             lyric_get = urllib.parse.urlencode({'lyric': s})    #格式化参数
             lyric_w = urllib.request.urlopen(download_api_url + "?%s" % lyric_get,timeout=5)  #设定获取歌词的网址
@@ -130,6 +135,10 @@ def get_download_url(s, t, user, song = "nothing"):
                 song = "关键词："+song
             if pic_url != "":
                 try:
+                    #伪装浏览器，防止屏蔽
+                    opener=urllib.request.build_opener()
+                    opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+                    urllib.request.install_opener(opener)
                     urllib.request.urlretrieve(pic_url+"?param=200y200", path+'/downloads/'+filename+'.jpg') #下载封面
                 except Exception as e: #下载出错
                     print('[log]下载封面出错：'+pic_url)
@@ -145,6 +154,12 @@ def get_download_url(s, t, user, song = "nothing"):
             f = urllib.request.urlopen(download_api_url + "?%s" % params,timeout=5)   #设定获取的网址
             url = f.read().decode('utf-8')  #读取结果
             print('[log]获取'+t+str(s)+'网址：'+url)
+
+            #伪装浏览器，防止屏蔽
+            opener=urllib.request.build_opener()
+            opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+            urllib.request.install_opener(opener)
+
             urllib.request.urlretrieve(url, path+'/downloads/'+filename+'.mp4') #下载mv
             print('[log]'+t+str(s)+'下载完成')
             if(song == "nothing"):  #当直接用id点mv时
