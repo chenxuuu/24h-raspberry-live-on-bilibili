@@ -212,7 +212,7 @@ def playlist_download(id,user):
         else:
             send_dm_long('正在下载歌单：'+playlist['playlist']['name']+'，共'+str(len(playlist['playlist']['tracks']))+'首')
     except Exception as e:  #防炸
-        print('shit')
+        print('shit(playlist)')
         print(e)
         send_dm_long('出错了：请检查命令或重试')
     for song in playlist['playlist']['tracks']:
