@@ -452,7 +452,7 @@ def pick_msg(s, user):
             jump_to_next_counter=5
         if(jump_to_next_counter < 5):   #次数未达到五次
             send_dm_long('已收到'+str(jump_to_next_counter)+'次切歌请求，达到五次将切歌')
-        else:   #次数未达到五次
+        else:   #次数达到五次
             jump_to_next_counter = 0    #次数统计清零
             send_dm_long('已执行切歌动作')
             os.system('killall ffmpeg') #强行结束ffmpeg进程
