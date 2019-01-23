@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install mutagen
+  - pip install moviepy
+  - pip aiohttp
+  - pip requests
+script:
+  - sudo apt-get install libatlas-base-dev
+  - pytest
