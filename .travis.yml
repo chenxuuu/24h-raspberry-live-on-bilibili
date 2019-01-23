@@ -4,8 +4,8 @@ python:
 install:
   - pip install mutagen
   - pip install moviepy
-  - pip aiohttp
-  - pip requests
+  - pip install aiohttp
+  - pip install requests
 script:
   - sudo apt-get install libatlas-base-dev
   - pytest
