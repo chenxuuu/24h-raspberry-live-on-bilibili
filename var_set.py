@@ -1,11 +1,12 @@
 #coding:utf-8
+import os
 
 #需要修改的值
 
 deviceType = "pi"
 #设备类型，可选类型为"pi"和"vps"，区分大小写
 
-path = '/home/pi/live'
+path = os.path.abspath('.')
 #本文件的路径，请修改
 
 roomid = '16703'
