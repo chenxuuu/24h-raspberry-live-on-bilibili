@@ -24,6 +24,16 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "shilela",
+      "name": "档100",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/31099477?v=4",
+      "profile": "https://github.com/shilela",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
