@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "madokaa",
+      "name": "madoka",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/16538800?v=4",
+      "profile": "https://github.com/madokaa",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "24h-raspberry-live-on-bilibili",
+  "projectOwner": "chenxuuu",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
