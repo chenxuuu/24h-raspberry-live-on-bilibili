@@ -1,5 +1,5 @@
 # 24h-raspberry-live-on-bilibili
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 树莓派驱动的b站直播点播台
 
@@ -247,6 +247,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/madokaa"><img src="https://avatars3.githubusercontent.com/u/16538800?v=4" width="100px;" alt="madoka"/><br /><sub><b>madoka</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=madokaa" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Amadokaa" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/Lvmoo"><img src="https://avatars3.githubusercontent.com/u/20103297?v=4" width="100px;" alt="Lvmoo"/><br /><sub><b>Lvmoo</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=Lvmoo" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3ALvmoo" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
