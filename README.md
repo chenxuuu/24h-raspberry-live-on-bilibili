@@ -1,5 +1,5 @@
 # 24h-raspberry-live-on-bilibili
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 
 树莓派驱动的b站直播点播台
 
@@ -249,6 +249,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/madokaa"><img src="https://avatars3.githubusercontent.com/u/16538800?v=4" width="100px;" alt="madoka"/><br /><sub><b>madoka</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=madokaa" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Amadokaa" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/Lvmoo"><img src="https://avatars3.githubusercontent.com/u/20103297?v=4" width="100px;" alt="Lvmoo"/><br /><sub><b>Lvmoo</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=Lvmoo" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3ALvmoo" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/shilela"><img src="https://avatars3.githubusercontent.com/u/31099477?v=4" width="100px;" alt="档100"/><br /><sub><b>档100</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=shilela" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Ashilela" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/luojiaquan7737"><img src="https://avatars0.githubusercontent.com/u/25074701?v=4" width="100px;" alt="luojiaquan0320"/><br /><sub><b>luojiaquan0320</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Aluojiaquan7737" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
