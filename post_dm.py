@@ -72,7 +72,6 @@ def last_files():
             del_file(f.replace('rendering.flv','ok.ass'))
         elif f.find('.mp4') != -1 or f.find('rendering1') != -1:
             del_file(f)
-last_files()
 
 #用于删除文件，防止报错
 def del_file(f):
@@ -81,6 +80,8 @@ def del_file(f):
         os.remove(path+'/downloads/'+f)
     except:
         print('delete error')
+
+last_files()
 
 #用于删除文件，防止报错
 def del_file_default_mp3(f):
