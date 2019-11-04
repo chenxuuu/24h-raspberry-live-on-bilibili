@@ -1,4 +1,5 @@
 # 24h-raspberry-live-on-bilibili
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
 
 树莓派驱动的b站直播点播台
 
@@ -236,3 +237,25 @@ screen python3 bilibiliClient.py
 如有不对的地方，请提交issue，也欢迎各位改进脚本并pr
 
 本程序协议为GPL
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/madokaa"><img src="https://avatars3.githubusercontent.com/u/16538800?v=4" width="100px;" alt="madoka"/><br /><sub><b>madoka</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=madokaa" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Amadokaa" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/Lvmoo"><img src="https://avatars3.githubusercontent.com/u/20103297?v=4" width="100px;" alt="Lvmoo"/><br /><sub><b>Lvmoo</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=Lvmoo" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3ALvmoo" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/shilela"><img src="https://avatars3.githubusercontent.com/u/31099477?v=4" width="100px;" alt="档100"/><br /><sub><b>档100</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/commits?author=shilela" title="Code">💻</a> <a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Ashilela" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/luojiaquan7737"><img src="https://avatars0.githubusercontent.com/u/25074701?v=4" width="100px;" alt="luojiaquan0320"/><br /><sub><b>luojiaquan0320</b></sub></a><br /><a href="https://github.com/chenxuuu/24h-raspberry-live-on-bilibili/issues?q=author%3Aluojiaquan7737" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://hanximeng.com"><img src="https://avatars1.githubusercontent.com/u/28382753?v=4" width="100px;" alt="寒曦朦"/><br /><sub><b>寒曦朦</b></sub></a><br /><a href="#ideas-hanximeng" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/XuewanZhao"><img src="https://avatars2.githubusercontent.com/u/33767163?v=4" width="100px;" alt="Xuewan"/><br /><sub><b>Xuewan</b></sub></a><br /><a href="#ideas-XuewanZhao" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/a08381"><img src="https://avatars2.githubusercontent.com/u/2505002?v=4" width="100px;" alt="a08381"/><br /><sub><b>a08381</b></sub></a><br /><a href="#ideas-a08381" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
