@@ -60,7 +60,7 @@ sudo apt-get -y install autoconf automake build-essential libass-dev libfreetype
 安装x264编码器（时间较长）：
 
 ```Bash
-git clone git://git.videolan.org/x264
+git clone https://code.videolan.org/videolan/x264.git
 cd x264
 ./configure --host=arm-unknown-linux-gnueabi --enable-static --disable-opencl --enable-shared
 make
